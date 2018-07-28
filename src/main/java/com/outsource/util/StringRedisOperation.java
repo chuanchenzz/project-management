@@ -18,8 +18,8 @@ public class StringRedisOperation {
         return stringRedisTemplate.opsForValue().get(key);
     }
 
-    public boolean delete(String key) {
-        return stringRedisTemplate.delete(key);
+    public void delete(String key) {
+        stringRedisTemplate.delete(key);
     }
 
     public void set(String key, String value) {

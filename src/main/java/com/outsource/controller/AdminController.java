@@ -1,6 +1,7 @@
 package com.outsource.controller;
 
 import com.outsource.constant.StatusCodeEnum;
+import com.outsource.model.AdminVO;
 import com.outsource.model.JsonResponse;
 import com.outsource.service.IAdminService;
 import com.outsource.util.StringUtils;
@@ -42,5 +43,26 @@ public class AdminController {
             return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!");
         }
         return new JsonResponse<>(StatusCodeEnum.SUCCESS.getCode(), adminId);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public JsonResponse<AdminVO> addAdmin(@RequestParam("account") String account, @RequestParam("password") String password, @RequestParam("level") byte level) {
+        boolean isValidParams = StringUtils.isNotEmpty(account, password) && level > 0;
+        if (!isValidParams) {
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
+        }
+        AdminVO adminVO = adminService.findAdmin(account);
+        if (adminVO != null) {
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "该用户名已经存在!");
+        }
+        AdminVO newAdmin = adminService.addAdmin(account, password, level);
+        if (newAdmin == null) {
+            return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "添加用户失败!");
+        }
+        return new JsonResponse<>(newAdmin, StatusCodeEnum.SUCCESS.getCode());
+    }
+    @RequestMapping(value = "/test",method = RequestMethod.GET)
+    public JsonResponse<String> test(){
+        return new JsonResponse<>("welcome",StatusCodeEnum.SUCCESS.getCode());
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.outsource.dao.AdminDao">
+    <resultMap id="BaseResultMap" type="com.outsource.model.AdminDO">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+    </resultMap>
+    <insert id="insertAdmin" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO admin(account,password,level) VALUES(#{admin.account},#{admin.password},#{admin.level});
+    </insert>
+    <select id="getAdminById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM admin WHERE id = #{id};
+    </select>
+    <select id="getAdminByAccountAndPassport" resultMap="BaseResultMap">
+        SELECT * FROM admin WHERE account = #{account} and password = #{password};
+    </select>
+    <select id="getAdminByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM admin WHERE account = #{account};
+    </select>
+    <update id="updateAdmin" parameterType="java.lang.Integer">
+        UPDATE admin set password = #{password},level = #{level} WHERE id = #{id};
+    </update>
+</mapper>

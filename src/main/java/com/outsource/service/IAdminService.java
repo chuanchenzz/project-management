@@ -1,5 +1,7 @@
 package com.outsource.service;
 
+import com.outsource.model.AdminVO;
+
 /**
  * @author chuanchen
  */
@@ -20,4 +22,27 @@ public interface IAdminService {
      * @return
      */
     String login(String account, String password);
+
+    /**
+     * 通过用户名查找用户信息
+     * @param account
+     * @return
+     */
+    AdminVO findAdmin(String account);
+
+    /**
+     * 根据id查找管理员
+     * @param id
+     * @return
+     */
+    AdminVO findAdmin(int id);
+
+    /**
+     * 添加用户
+     * @param account
+     * @param password
+     * @param level
+     * @return
+     */
+    AdminVO addAdmin(String account, String password, byte level);
 }

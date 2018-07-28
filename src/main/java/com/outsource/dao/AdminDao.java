@@ -30,4 +30,18 @@ public interface AdminDao {
      * @return
      */
     AdminDO getAdminByAccountAndPassport(@Param("account") String account, @Param("password") String password);
+
+    /**
+     * 根据用户名查找用户
+     * @param account
+     * @return
+     */
+    AdminDO getAdminByAccount(@Param("account") String account);
+
+    /**
+     * 添加管理员
+     * @param admin
+     * @return
+     */
+    Integer insertAdmin(AdminDO admin);
 }
