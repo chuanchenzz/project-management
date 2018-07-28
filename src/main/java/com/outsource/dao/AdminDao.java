@@ -22,4 +22,12 @@ public interface AdminDao {
      * @return
      */
     AdminDO getAdminById(@Param("id") int id);
+
+    /**
+     * 根据账号和密码查找用户
+     * @param account
+     * @param password
+     * @return
+     */
+    AdminDO getAdminByAccountAndPassport(@Param("account") String account, @Param("password") String password);
 }

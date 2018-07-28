@@ -2,6 +2,8 @@ package com.outsource.util;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author chuanchen
  */
@@ -10,5 +12,21 @@ public class StringRedisOperation {
 
     public StringRedisOperation(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
+    }
+
+    public String get(String key) {
+        return stringRedisTemplate.opsForValue().get(key);
+    }
+
+    public boolean delete(String key) {
+        return stringRedisTemplate.delete(key);
+    }
+
+    public void set(String key, String value) {
+        stringRedisTemplate.opsForValue().set(key, value);
+    }
+
+    public void setExpire(String key, String value, long expireTime) {
+        stringRedisTemplate.opsForValue().set(key, value, expireTime, TimeUnit.SECONDS);
     }
 }
