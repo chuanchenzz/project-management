@@ -18,7 +18,12 @@ public enum StatusCodeEnum {
     /**
      * 参数错误
      */
-    PARAMETER_ERROR(400,"参数错误!");
+    PARAMETER_ERROR(400,"参数错误!"),
+
+    /**
+     * 未找到
+     */
+    NOT_FOUND(404,"未找到!");
 
     StatusCodeEnum(Integer code, String description){
         this.code = code;

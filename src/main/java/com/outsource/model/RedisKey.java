@@ -12,4 +12,8 @@ public class RedisKey {
     public static final String ADMIN_ID_SESSION = "admin_id_session_";
 
     public static final String SESSION = "session_";
+
+    public static final String PROJECT_TYPE = "project_type_";
+
+    public static final String PROJECT_TYPE_CHILD_ID_LIST = "project_type_child_id_list_";
 }
