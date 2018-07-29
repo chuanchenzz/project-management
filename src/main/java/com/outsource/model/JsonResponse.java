@@ -17,7 +17,7 @@ public class JsonResponse<T> implements Serializable{
         this.errorMessage = errorMessage;
     }
 
-    public JsonResponse(Integer statusCode, T response){
+    public JsonResponse(T response, Integer statusCode){
         this.statusCode = statusCode;
         this.response = response;
     }

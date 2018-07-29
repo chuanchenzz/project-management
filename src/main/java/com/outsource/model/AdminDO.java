@@ -10,13 +10,19 @@ public class AdminDO implements Serializable{
 
     private Integer id;
     private String account;
-    private String passport;
+    private String password;
     /**
      * 后三位代表权限(第一位代表项目管理,第二位代表文章管理,第三位代表留言管理)
      */
     private Byte level;
 
     public AdminDO(){}
+
+    public AdminDO(String account, String password, byte level){
+        this.account = account;
+        this.password = password;
+        this.level = level;
+    }
 
     public Integer getId() {
         return id;
@@ -34,12 +40,12 @@ public class AdminDO implements Serializable{
         this.account = account;
     }
 
-    public String getPassport() {
-        return passport;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassport(String passport) {
-        this.passport = passport;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Byte getLevel() {
@@ -55,7 +61,7 @@ public class AdminDO implements Serializable{
         return "AdminDO{" +
                 "id=" + id +
                 ", account='" + account + '\'' +
-                ", passport='" + passport + '\'' +
+                ", password='" + password + '\'' +
                 ", level=" + level +
                 '}';
     }
