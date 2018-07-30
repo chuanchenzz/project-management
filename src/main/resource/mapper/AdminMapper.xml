@@ -19,6 +19,9 @@
     <select id="getAdminByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT * FROM admin WHERE account = #{account};
     </select>
+    <select id="listAdmin" resultMap="BaseResult">
+        SELECT * FROM admin;
+    </select>
     <update id="updateAdmin" parameterType="java.lang.Integer">
         UPDATE admin set password = #{password},level = #{level} WHERE id = #{id};
     </update>

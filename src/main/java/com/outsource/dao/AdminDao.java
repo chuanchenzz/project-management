@@ -3,6 +3,8 @@ package com.outsource.dao;
 import com.outsource.model.AdminDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -44,4 +46,10 @@ public interface AdminDao {
      * @return
      */
     Integer insertAdmin(AdminDO admin);
+
+    /**
+     * 获取所有的管理员
+     * @return
+     */
+    List<AdminDO>  listAdmin();
 }

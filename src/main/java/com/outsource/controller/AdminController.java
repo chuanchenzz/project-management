@@ -10,11 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     @Autowired
@@ -61,8 +63,18 @@ public class AdminController {
         }
         return new JsonResponse<>(newAdmin, StatusCodeEnum.SUCCESS.getCode());
     }
-    @RequestMapping(value = "/test",method = RequestMethod.GET)
-    public JsonResponse<String> test(){
-        return new JsonResponse<>("welcome",StatusCodeEnum.SUCCESS.getCode());
+
+    @RequestMapping("/list")
+    public JsonResponse<List<AdminVO>> findAdminList() {
+        List<AdminVO> adminList = adminService.findAdminList();
+        if (adminList == null) {
+            return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!");
+        }
+        return new JsonResponse<>(adminList, StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public JsonResponse<String> test() {
+        return new JsonResponse<>("welcome", StatusCodeEnum.SUCCESS.getCode());
     }
 }

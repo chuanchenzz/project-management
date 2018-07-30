@@ -2,6 +2,8 @@ package com.outsource.service;
 
 import com.outsource.model.AdminVO;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -45,4 +47,10 @@ public interface IAdminService {
      * @return
      */
     AdminVO addAdmin(String account, String password, byte level);
+
+    /**
+     * 获取所有管理员信息
+     * @return
+     */
+    List<AdminVO> findAdminList();
 }

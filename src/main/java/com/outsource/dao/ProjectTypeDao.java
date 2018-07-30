@@ -3,6 +3,8 @@ package com.outsource.dao;
 import com.outsource.model.ProjectTypeDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -34,4 +36,17 @@ public interface ProjectTypeDao {
      * @return
      */
     int updateProjectType(ProjectTypeDO projectType);
+
+    /**
+     * 查找所有一级项目类型的id列表
+     * @return
+     */
+    List<Integer> listMainProjectTypeId();
+
+    /**
+     * 获取获取指定一级项目下的二级项目id列表
+     * @param mainId
+     * @return
+     */
+    List<Integer> listChildProjectTypeId(@Param("mainId") int mainId);
 }

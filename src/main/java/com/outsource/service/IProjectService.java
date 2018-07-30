@@ -1,6 +1,9 @@
 package com.outsource.service;
 
 import com.outsource.model.ProjectTypeDO;
+import com.outsource.model.ProjectTypeVO;
+
+import java.util.List;
 
 /**
  * @author chuanchen
@@ -37,4 +40,23 @@ public interface IProjectService {
      * @return
      */
     ProjectTypeDO updateProjectType(int id, String name, String description);
+
+    /**
+     * 获取所有一级项目类型
+     * @return
+     */
+    List<ProjectTypeDO> findMainProjectTypeList();
+
+    /**
+     * 获取指定的一级项目的二级项目列表
+     * @param mainProjectTypeId
+     * @return
+     */
+    List<ProjectTypeDO> findChildProjectTypeList(int mainProjectTypeId);
+
+    /**
+     * 获取所有的项目类型
+     * @return
+     */
+    List<ProjectTypeVO> findProjectTypeList();
 }

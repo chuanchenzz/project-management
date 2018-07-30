@@ -14,8 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -112,5 +116,24 @@ public class AdminServiceImpl implements IAdminService {
         String adminKey = KeyUtil.generateKey(RedisKey.ADMIN, admin.getId());
         redisOperation.set(adminKey, admin);
         return new AdminVO(admin.getId(), account);
+    }
+
+    @Override
+    public List<AdminVO> findAdminList() {
+        List<AdminDO> adminDOList;
+        try {
+            adminDOList = adminDao.listAdmin();
+        } catch (Exception e) {
+            logger.error("find admin list error!",e);
+            return null;
+        }
+        if (CollectionUtils.isEmpty(adminDOList)) {
+            return Collections.emptyList();
+        }
+        List<AdminVO> adminVOList = new ArrayList<>(adminDOList.size());
+        for (AdminDO adminDO : adminDOList) {
+            adminVOList.add(new AdminVO(adminDO.getId(), adminDO.getAccount()));
+        }
+        return adminVOList;
     }
 }
