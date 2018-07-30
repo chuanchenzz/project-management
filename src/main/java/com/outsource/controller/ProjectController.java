@@ -3,12 +3,15 @@ package com.outsource.controller;
 import com.outsource.constant.StatusCodeEnum;
 import com.outsource.model.JsonResponse;
 import com.outsource.model.ProjectTypeDO;
+import com.outsource.model.ProjectTypeVO;
 import com.outsource.service.IProjectService;
 import com.outsource.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author chuanchen
@@ -48,23 +51,29 @@ public class ProjectController {
         return new JsonResponse<>(projectType, StatusCodeEnum.SUCCESS.getCode());
     }
 
-    @RequestMapping(value = "/type/{id}",method = RequestMethod.PUT)
-    public JsonResponse<ProjectTypeDO> updateProjectType(@PathVariable("id") int id, @RequestParam("name") String name, @RequestParam("description") String description){
-        boolean isValidParams = StringUtils.isNotEmpty(name,description) && id > 0;
-        if(!isValidParams){
-            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+    @RequestMapping(value = "/type/{id}", method = RequestMethod.PUT)
+    public JsonResponse<ProjectTypeDO> updateProjectType(@PathVariable("id") int id, @RequestParam("name") String name, @RequestParam("description") String description) {
+        boolean isValidParams = StringUtils.isNotEmpty(name, description) && id > 0;
+        if (!isValidParams) {
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
         ProjectTypeDO oldProjectType = projectService.findProjectType(id);
-        if(oldProjectType == null){
-            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"项目类型不存在!");
+        if (oldProjectType == null) {
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(), "项目类型不存在!");
         }
-        if(oldProjectType.getParentId() == 0 && !name.equals(oldProjectType.getName())){
-            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"一级项目类型不允许修改名称!");
+        if (oldProjectType.getParentId() == 0 && !name.equals(oldProjectType.getName())) {
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "一级项目类型不允许修改名称!");
         }
-        ProjectTypeDO projectType = projectService.updateProjectType(id,name,description);
-        if(projectType == null){
-            return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!");
+        ProjectTypeDO projectType = projectService.updateProjectType(id, name, description);
+        if (projectType == null) {
+            return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!");
         }
-        return new JsonResponse<>(projectType,StatusCodeEnum.SUCCESS.getCode());
+        return new JsonResponse<>(projectType, StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/type/list", method = RequestMethod.GET)
+    public JsonResponse<List<ProjectTypeVO>> findProjectTypeList() {
+        List<ProjectTypeVO> projectTypeVOList = projectService.findProjectTypeList();
+        return new JsonResponse<>(projectTypeVOList, StatusCodeEnum.SUCCESS.getCode());
     }
 }
