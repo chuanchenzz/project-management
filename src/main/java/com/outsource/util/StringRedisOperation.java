@@ -29,4 +29,8 @@ public class StringRedisOperation {
     public void setExpire(String key, String value, long expireTime) {
         stringRedisTemplate.opsForValue().set(key, value, expireTime, TimeUnit.SECONDS);
     }
+
+    public boolean hasKey(String key){
+        return stringRedisTemplate.hasKey(key);
+    }
 }
