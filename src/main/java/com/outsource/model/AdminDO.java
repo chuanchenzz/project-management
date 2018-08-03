@@ -14,11 +14,11 @@ public class AdminDO implements Serializable{
     /**
      * 后三位代表权限(第一位代表项目管理,第二位代表文章管理,第三位代表留言管理)
      */
-    private Byte level;
+    private Integer level;
 
     public AdminDO(){}
 
-    public AdminDO(String account, String password, byte level){
+    public AdminDO(String account, String password, Integer level){
         this.account = account;
         this.password = password;
         this.level = level;
@@ -48,11 +48,11 @@ public class AdminDO implements Serializable{
         this.password = password;
     }
 
-    public Byte getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(Byte level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 

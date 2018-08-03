@@ -34,7 +34,7 @@ public class AdminController {
         return new JsonResponse<>(jsonSession, StatusCodeEnum.SUCCESS.getCode());
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public JsonResponse<Integer> updateAdmin(@PathVariable("id") int id, @RequestParam("password") String password, @RequestParam("level") Integer level) {
         boolean isValidParams = (id > 0 && !StringUtils.isEmpty(password) && level > 0);
         if (!isValidParams) {
@@ -44,7 +44,7 @@ public class AdminController {
         if (adminId == null) {
             return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!");
         }
-        return new JsonResponse<>(StatusCodeEnum.SUCCESS.getCode(), adminId);
+        return new JsonResponse<>(adminId,StatusCodeEnum.SUCCESS.getCode());
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -64,7 +64,7 @@ public class AdminController {
         return new JsonResponse<>(newAdmin, StatusCodeEnum.SUCCESS.getCode());
     }
 
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
     public JsonResponse<List<AdminVO>> findAdminList() {
         List<AdminVO> adminList = adminService.findAdminList();
         if (adminList == null) {
@@ -73,8 +73,4 @@ public class AdminController {
         return new JsonResponse<>(adminList, StatusCodeEnum.SUCCESS.getCode());
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public JsonResponse<String> test() {
-        return new JsonResponse<>("welcome", StatusCodeEnum.SUCCESS.getCode());
-    }
 }

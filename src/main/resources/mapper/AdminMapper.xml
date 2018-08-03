@@ -7,8 +7,8 @@
         <result column="password" property="password" jdbcType="VARCHAR"/>
         <result column="level" property="level" jdbcType="INTEGER"/>
     </resultMap>
-    <insert id="insertAdmin" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO admin(account,password,level) VALUES(#{admin.account},#{admin.password},#{admin.level});
+    <insert id="insertAdmin" parameterType="com.outsource.model.AdminDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO admin(account,password,level) VALUES(#{account},#{password},#{level});
     </insert>
     <select id="getAdminById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT * FROM admin WHERE id = #{id};
@@ -19,10 +19,10 @@
     <select id="getAdminByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT * FROM admin WHERE account = #{account};
     </select>
-    <select id="listAdmin" resultMap="BaseResult">
+    <select id="listAdmin" resultMap="BaseResultMap">
         SELECT * FROM admin;
     </select>
-    <update id="updateAdmin" parameterType="java.lang.Integer">
+    <update id="updateAdmin">
         UPDATE admin set password = #{password},level = #{level} WHERE id = #{id};
     </update>
 </mapper>

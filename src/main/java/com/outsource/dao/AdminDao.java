@@ -51,5 +51,5 @@ public interface AdminDao {
      * 获取所有的管理员
      * @return
      */
-    List<AdminDO>  listAdmin();
+    List<AdminDO> listAdmin();
 }

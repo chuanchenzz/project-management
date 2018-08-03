@@ -51,7 +51,7 @@ public class AdminServiceImpl implements IAdminService {
                 return null;
             }
         } else {
-            admin.setLevel((byte) level);
+            admin.setLevel(level);
             admin.setPassword(password);
         }
         redisOperation.set(adminKey, admin);
@@ -105,7 +105,7 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public AdminVO addAdmin(String account, String password, byte level) {
+    public AdminVO addAdmin(String account, String password, int level) {
         AdminDO admin = new AdminDO(account, password, level);
         try {
             adminDao.insertAdmin(admin);
