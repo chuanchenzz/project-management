@@ -2,6 +2,7 @@ package com.outsource.controller;
 
 import com.outsource.constant.StatusCodeEnum;
 import com.outsource.model.JsonResponse;
+import com.outsource.model.ProjectDO;
 import com.outsource.model.ProjectTypeDO;
 import com.outsource.model.ProjectTypeVO;
 import com.outsource.service.IProjectService;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,5 +77,49 @@ public class ProjectController {
     public JsonResponse<List<ProjectTypeVO>> findProjectTypeList() {
         List<ProjectTypeVO> projectTypeVOList = projectService.findProjectTypeList();
         return new JsonResponse<>(projectTypeVOList, StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/",method = RequestMethod.POST)
+    public JsonResponse<Integer> addProject(@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
+                                            @RequestParam("mobile") String mobile,@RequestParam("master_graph") String masterGraph,@RequestParam("introduction") String introduction,
+                                            @RequestParam("poster") String poster,@RequestParam("classification") int classification,@RequestParam("description") String description,
+                                            @RequestParam("recommend_level") int recommendLevel){
+        ProjectDO projectDO = projectArgsIsValid(name,location,money,mobile,masterGraph,introduction,poster,classification,description,recommendLevel);
+        if(projectDO == null){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        return new JsonResponse<>(1,StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    private ProjectDO projectArgsIsValid(String name, String location,String money,String mobile, String masterGraph,String introduction,String poster,int classification,String description,int recommendLevel){
+        if(StringUtils.isEmpty(name,location,money,mobile,masterGraph,introduction,poster,description)){
+            logger.warn("params is null! name:{}, location:{}, money:{},mobile:{},masterGraph:{},introduction:{},poster:{},description:{}",name,location,money,mobile,masterGraph,introduction,poster,description);
+            return null;
+        }
+        if(Long.valueOf(money) < 0){
+            logger.warn("money param error! money:{}",money);
+            return null;
+        }
+        if(classification <= 0){
+            logger.warn("classification param error! money:{}",money);
+            return null;
+        }
+        if(recommendLevel < 0){
+            logger.warn("recommendLevel param error! money:{}",money);
+            return null;
+        }
+        ProjectDO project = new ProjectDO();
+        project.setName(name);
+        project.setLocation(location);
+        project.setMoney(money);
+        project.setMobile(mobile);
+        project.setMasterGraph(masterGraph);
+        project.setIntroduction(introduction);
+        project.setPoster(poster);
+        project.setClassification(classification);
+        project.setDescription(description);
+        project.setRecommendLevel(recommendLevel);
+        project.setTime(new Date());
+        return project;
     }
 }
