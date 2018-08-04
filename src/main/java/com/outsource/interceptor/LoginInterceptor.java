@@ -3,6 +3,9 @@ package com.outsource.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.outsource.constant.StatusCodeEnum;
 import com.outsource.model.JsonResponse;
+import com.outsource.model.RedisKey;
+import com.outsource.util.KeyUtil;
+import com.outsource.util.StringRedisOperation;
 import com.outsource.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +24,13 @@ import java.io.PrintWriter;
  * @author chuanchen
  */
 @Component
-public class AuthInterceptor implements HandlerInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(AuthInterceptor.class);
+public class LoginInterceptor implements HandlerInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
     private static final String ADMIN_SESSION = "admin_session";
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    StringRedisOperation stringRedisOperation;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
@@ -37,6 +42,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         for (Cookie cookie : cookies) {
             boolean isLogin = ADMIN_SESSION.equals(cookie.getName()) && StringUtils.isNotEmpty(cookie.getValue());
             if (isLogin) {
+                String sessionKey = KeyUtil.generateKey(RedisKey.SESSION,cookie.getValue());
+                String adminId = stringRedisOperation.get(sessionKey);
+                if(adminId == null){
+                    printError(httpServletResponse);
+                    return false;
+                }
+                httpServletRequest.setAttribute("admin_id",adminId);
                 return true;
             }
         }
