@@ -23,7 +23,17 @@ public enum StatusCodeEnum {
     /**
      * 未找到
      */
-    NOT_FOUND(404,"未找到!");
+    NOT_FOUND(404,"未找到!"),
+
+    /**
+     * 权限错误
+     */
+    AUTH_ERROR(407,"权限错误!"),
+
+    /**
+     * 用户未登陆
+     */
+    NOT_LOGIN(403,"用户未登陆!");
 
     StatusCodeEnum(Integer code, String description){
         this.code = code;

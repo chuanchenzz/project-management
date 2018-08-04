@@ -46,7 +46,7 @@ public interface IAdminService {
      * @param level
      * @return
      */
-    AdminVO addAdmin(String account, String password, byte level);
+    AdminVO addAdmin(String account, String password, int level);
 
     /**
      * 获取所有管理员信息

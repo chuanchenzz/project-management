@@ -23,6 +23,21 @@
     <commons-codec-version>1.10</commons-codec-version>
   </properties>
 
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <package.target>dev</package.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>live</id>
+      <properties>
+        <package.target>live</package.target>
+      </properties>
+    </profile>
+  </profiles>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -81,11 +96,15 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.7</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+      <version>${spring.boot.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
     <finalName>${project.artifactId}</finalName>
-    <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.springframework.boot</groupId>
@@ -100,6 +119,9 @@
               </configuration>
             </execution>
           </executions>
+          <configuration>
+            <mainClass>com.outsource.AppApplication</mainClass>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -111,25 +133,6 @@
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
-        <!--<plugin>-->
-          <!--<artifactId>maven-assembly-plugin</artifactId>-->
-          <!--<version>3.1.0</version>-->
-          <!--<configuration>-->
-            <!--<finalName>${project.artifactId}</finalName>-->
-            <!--<descriptors>-->
-              <!--<descriptor>src/main/assemble/distribution.xml</descriptor>-->
-            <!--</descriptors>-->
-          <!--</configuration>-->
-          <!--<executions>-->
-            <!--<execution>-->
-              <!--<id>make-assembly</id>-->
-              <!--<phase>package</phase>-->
-              <!--<goals>-->
-                <!--<goal>single</goal>-->
-              <!--</goals>-->
-            <!--</execution>-->
-          <!--</executions>-->
-        <!--</plugin>-->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
@@ -144,7 +147,7 @@
               <configuration>
                 <resources>
                   <resource>
-                      <directory>src/main/resources-dev</directory>
+                      <directory>src/main/resources-${package.target}</directory>
                   </resource>
                 </resources>
               </configuration>
@@ -152,6 +155,5 @@
           </executions>
         </plugin>
       </plugins>
-    </pluginManagement>
   </build>
 </project>

@@ -51,7 +51,7 @@ public class AdminServiceImpl implements IAdminService {
                 return null;
             }
         } else {
-            admin.setLevel((byte) level);
+            admin.setLevel(level);
             admin.setPassword(password);
         }
         redisOperation.set(adminKey, admin);
@@ -83,7 +83,7 @@ public class AdminServiceImpl implements IAdminService {
     public AdminVO findAdmin(String account) {
         AdminDO admin = adminDao.getAdminByAccount(account);
         if (admin != null) {
-            return new AdminVO(admin.getId(), admin.getAccount());
+            return new AdminVO(admin.getId(), admin.getAccount(),admin.getLevel());
         } else {
             return null;
         }
@@ -101,11 +101,11 @@ public class AdminServiceImpl implements IAdminService {
             }
             redisOperation.set(adminKey, admin);
         }
-        return new AdminVO(admin.getId(), admin.getAccount());
+        return new AdminVO(admin.getId(), admin.getAccount(),admin.getLevel());
     }
 
     @Override
-    public AdminVO addAdmin(String account, String password, byte level) {
+    public AdminVO addAdmin(String account, String password, int level) {
         AdminDO admin = new AdminDO(account, password, level);
         try {
             adminDao.insertAdmin(admin);
@@ -115,7 +115,7 @@ public class AdminServiceImpl implements IAdminService {
         }
         String adminKey = KeyUtil.generateKey(RedisKey.ADMIN, admin.getId());
         redisOperation.set(adminKey, admin);
-        return new AdminVO(admin.getId(), account);
+        return new AdminVO(admin.getId(), account,level);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class AdminServiceImpl implements IAdminService {
         }
         List<AdminVO> adminVOList = new ArrayList<>(adminDOList.size());
         for (AdminDO adminDO : adminDOList) {
-            adminVOList.add(new AdminVO(adminDO.getId(), adminDO.getAccount()));
+            adminVOList.add(new AdminVO(adminDO.getId(), adminDO.getAccount(),adminDO.getLevel()));
         }
         return adminVOList;
     }

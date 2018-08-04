@@ -7,12 +7,14 @@ public class AdminVO implements Serializable{
 
     private String account;
     private Integer adminId;
+    private Integer level;
 
     public AdminVO(){}
 
-    public AdminVO(Integer adminId, String account){
+    public AdminVO(Integer adminId, String account,Integer level){
         this.adminId = adminId;
         this.account = account;
+        this.level = level;
     }
 
     public String getAccount() {
@@ -31,11 +33,20 @@ public class AdminVO implements Serializable{
         this.adminId = adminId;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
     @Override
     public String toString() {
         return "AdminVO{" +
                 "account='" + account + '\'' +
                 ", adminId=" + adminId +
+                ", level=" + level +
                 '}';
     }
 }
