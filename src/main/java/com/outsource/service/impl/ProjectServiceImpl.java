@@ -104,6 +104,20 @@ public class ProjectServiceImpl implements IProjectService {
             logger.warn("project type not found! id:{}",id);
             return null;
         }
+        Integer parentId = projectTypeDO.getParentId();
+        if(parentId > 0){
+            String projectIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,id);
+            if(redisOperation.hasKey(projectIdListKey)){
+                logger.info("project type has project,can't delete, id:{}",id);
+                return null;
+            }
+        }else {
+            String mainProjectTypeKey = KeyUtil.generateKey(RedisKey.PROJECT_TYPE_CHILD_ID_LIST,id);
+            if(redisOperation.hasKey(mainProjectTypeKey)){
+                logger.info("main project type has child type, id:{}",id);
+                return null;
+            }
+        }
         int updateId = projectTypeDao.updateStatus(id,ProjectTypeDO.StatusEnum.HIDE.getCode());
         if(updateId <= 0){
             logger.warn("update fail! maybe project type not exist! id:{}",id);
@@ -112,7 +126,6 @@ public class ProjectServiceImpl implements IProjectService {
         String projectTypeKey = KeyUtil.generateKey(RedisKey.PROJECT_TYPE,id);
         projectTypeDO.setStatus(ProjectTypeDO.StatusEnum.HIDE.getCode());
         redisOperation.set(projectTypeKey,projectTypeDO);
-        Integer parentId = projectTypeDO.getParentId();
         if(parentId == 0){
             if(redisOperation.removeZSetEntry(RedisKey.PROJECT_TYPE_MAIN_ID_LIST,id) == null){
                 logger.warn("delete main id from ZSet! id:{}",id);
