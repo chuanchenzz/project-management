@@ -15,11 +15,14 @@
     <select id="getProjectTypeByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT * FROM  project_type WHERE name = #{name};
     </select>
-    <insert id="insertProjectType" parameterType="com.outsource.model.ProjectTypeDO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO project_type(name,description,parent_id,status,create_time) VALUES (#{projectType.name},#{projectType.description},#{projectType.parentId},#{projectType.status},#{projectType.createTime});
+    <insert id="insertProjectType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO project_type(name,description,parent_id,status,create_time) VALUES (#{name},#{description},#{parentId},#{status},#{createTime});
     </insert>
     <update id="updateProjectType" parameterType="com.outsource.model.ProjectTypeDO">
         UPDATE project_type set name = #{projectType.name},description = #{projectType.description};
+    </update>
+    <update id="updateStatus">
+        UPDATE project_type set status = #{status} WHERE id = #{id};
     </update>
     <select id="listMainProjectTypeId" resultType="java.lang.Integer">
         SELECT id FROM project_type WHERE parent_id = 0;

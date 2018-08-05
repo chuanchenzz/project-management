@@ -25,6 +25,24 @@ public class ProjectDO implements Serializable{
 
     public ProjectDO(){}
 
+    public enum  DisplayStatusEnum{
+        /**
+         * 不显示
+         */
+        NOT_DISPLAY(0,"不显示"),
+        /**
+         * 显示
+         */
+        DISPLAY(1,"显示");
+
+        DisplayStatusEnum(int code, String description){
+            this.code = code;
+            this.description = description;
+        }
+        public Integer code;
+        public String description;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -19,5 +19,9 @@ public class RedisKey {
 
     public static final String PROJECT_TYPE_MAIN_ID_LIST = "project_type_main_id_list";
 
-    public static final String PROJECT_TYPE_MAIN_ID_LIST_EXIST = "project_type_main_id_list_exist";
+    public static final String PROJECT_TYPE_MAIN_ID_LIST_NOT_EXIST = "project_type_main_id_list_not_exist";
+
+    public static final String PROJECT = "project_";
+
+    public static final String PROJECT_ID_LIST = "project_id_list_";
 }

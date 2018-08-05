@@ -29,10 +29,19 @@ public class RedisOperation {
     }
 
     public Set<Integer> getZSet(String key) {
-        return redisTemplate.opsForZSet().range(key, 0, redisTemplate.opsForSet().size(key) - 1);
+        Long size = redisTemplate.opsForZSet().size(key);
+        return redisTemplate.opsForZSet().range(key, 0, size);
     }
 
     public boolean hasKey(String key){
         return redisTemplate.hasKey(key);
+    }
+
+    public void deleteKey(String key){
+        redisTemplate.delete(key);
+    }
+
+    public Long removeZSetEntry(String key, Object value){
+        return redisTemplate.opsForZSet().remove(key,value);
     }
 }

@@ -38,6 +38,14 @@ public interface ProjectTypeDao {
     int updateProjectType(ProjectTypeDO projectType);
 
     /**
+     * 更新项目类型显示状态
+     * @param id
+     * @param status
+     * @return
+     */
+    int updateStatus(@Param("id") int id, @Param("status") int status);
+
+    /**
      * 查找所有一级项目类型的id列表
      * @return
      */

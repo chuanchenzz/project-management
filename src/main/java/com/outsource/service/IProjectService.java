@@ -1,7 +1,9 @@
 package com.outsource.service;
 
+import com.outsource.model.ProjectDO;
 import com.outsource.model.ProjectTypeDO;
 import com.outsource.model.ProjectTypeVO;
+import com.outsource.model.ProjectVO;
 
 import java.util.List;
 
@@ -42,6 +44,13 @@ public interface IProjectService {
     ProjectTypeDO updateProjectType(int id, String name, String description);
 
     /**
+     * 删除项目类型
+     * @param id
+     * @return
+     */
+    Integer deleteProjectType(int id);
+
+    /**
      * 获取所有一级项目类型
      * @return
      */
@@ -59,4 +68,11 @@ public interface IProjectService {
      * @return
      */
     List<ProjectTypeVO> findProjectTypeList();
+
+    /**
+     * 添加项目
+     * @param projectDO
+     * @return
+     */
+    ProjectVO addProject(ProjectDO projectDO);
 }
