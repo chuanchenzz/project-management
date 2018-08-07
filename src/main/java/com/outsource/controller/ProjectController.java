@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author chuanchen
@@ -120,7 +121,7 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/images", method = RequestMethod.POST)
-    public Map<String, String> uploadImages(MultipartFile multipartFile) {
+    public Map<String, String> uploadImages(@RequestParam("file") MultipartFile multipartFile) {
         if (multipartFile.isEmpty() || StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
             throw new IllegalArgumentException("images is empty!");
         }
