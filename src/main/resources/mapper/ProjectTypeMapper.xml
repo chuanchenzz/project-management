@@ -28,6 +28,6 @@
         SELECT id FROM project_type WHERE parent_id = 0;
     </select>
     <select id="listChildProjectTypeId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-        SELECT * FROM project_type WHERE parent_id = #{mainId};
+        SELECT id FROM project_type WHERE parent_id = #{mainId} AND status = 1;
     </select>
 </mapper>

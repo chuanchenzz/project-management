@@ -220,4 +220,39 @@ public class ProjectServiceImpl implements IProjectService {
         redisOperation.addZSetItem(projectIdListKey,projectDO.getId(),projectDO.getTime().getTime());
         return new ProjectVO(projectDO);
     }
+
+    @Override
+    public Integer auditProject(int id, int status) {
+        ProjectDO projectDO = findProject(id);
+        if(projectDO == null || status == projectDO.getDisplayStatus()){
+            return null;
+        }
+        int updateResult = projectDao.updateDisplayStatus(id,status);
+        if(updateResult <= 0){
+            return null;
+        }
+        projectDO.setDisplayStatus(status);
+        String projectKey = KeyUtil.generateKey(RedisKey.PROJECT,id);
+        redisOperation.set(projectKey,projectDO);
+        String projectListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectDO.getClassification());
+        if(status == ProjectDO.DisplayStatusEnum.DISPLAY.code){
+            redisOperation.addZSetItem(projectListKey,projectDO.getId(),projectDO.getTime().getTime());
+        }else if(status == ProjectDO.DisplayStatusEnum.NOT_DISPLAY.code){
+            redisOperation.removeZSetEntry(projectListKey,projectDO.getId());
+        }
+        return id;
+    }
+
+    @Override
+    public ProjectDO findProject(int id) {
+        String projectKey = KeyUtil.generateKey(RedisKey.PROJECT,id);
+        ProjectDO projectDO = (ProjectDO) redisOperation.get(projectKey);
+        if(projectDO == null){
+            projectDO = projectDao.findProjectById(id);
+            if(projectDO != null){
+                redisOperation.set(projectKey,projectDO);
+            }
+        }
+        return projectDO;
+    }
 }

@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author chuanchen
@@ -97,15 +96,15 @@ public class ProjectController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public JsonResponse<ProjectVO> addProject(@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
-                                            @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
-                                            @RequestParam("poster") String poster, @RequestParam("classification") int classification, @RequestParam("description") String description,
-                                            @RequestParam("recommend_level") int recommendLevel) {
+                                              @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
+                                              @RequestParam("poster") String poster, @RequestParam("classification") int classification, @RequestParam("description") String description,
+                                              @RequestParam("recommend_level") int recommendLevel) {
         ProjectDO projectDO = projectArgsIsValid(name, location, money, mobile, masterGraph, introduction, poster, classification, description, recommendLevel);
         if (projectDO == null) {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
         ProjectVO projectVO = projectService.addProject(projectDO);
-        return projectVO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(projectVO,StatusCodeEnum.SUCCESS.getCode());
+        return projectVO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(projectVO, StatusCodeEnum.SUCCESS.getCode());
     }
 
     @RequestMapping(value = "/images/{imageName}", method = RequestMethod.GET)
@@ -131,16 +130,25 @@ public class ProjectController {
         }
         String filePath = ImageUtils.generateFileName(".png");
         //获取路径
-        String absolutePath = ImageUtils.saveImg(multipartFile,IMAGE_DIR,filePath);
+        String absolutePath = ImageUtils.saveImg(multipartFile, IMAGE_DIR, filePath);
         if (absolutePath == null) {
             throw new IllegalArgumentException();
         }
         Map<String, String> resultMap = new HashMap<>(4);
         resultMap.put("state", "SUCCESS");
-        resultMap.put("url","http://140.143.2.99:8999/project/images/" + filePath);
-        resultMap.put("title",filePath);
-        resultMap.put("original",filePath);
+        resultMap.put("url", "http://140.143.2.99:8999/project/images/" + filePath);
+        resultMap.put("title", filePath);
+        resultMap.put("original", filePath);
         return resultMap;
+    }
+
+    @RequestMapping(value = "/audit/{id}", method = RequestMethod.POST)
+    public JsonResponse<Integer> auditProject(@PathVariable("id") int id, @RequestParam("status") int status) {
+        if (status != ProjectDO.DisplayStatusEnum.DISPLAY.code && status != ProjectDO.DisplayStatusEnum.NOT_DISPLAY.code) {
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
+        }
+        Integer auditResult = projectService.auditProject(id, status);
+        return auditResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(auditResult, StatusCodeEnum.SUCCESS.getCode());
     }
 
     private ProjectDO projectArgsIsValid(String name, String location, String money, String mobile, String masterGraph, String introduction, String poster, int classification, String description, int recommendLevel) {
@@ -157,8 +165,8 @@ public class ProjectController {
             return null;
         }
         ProjectTypeDO projectType = projectService.findProjectType(classification);
-        if(projectType == null){
-            logger.warn("project type not found! id:{}",classification);
+        if (projectType == null) {
+            logger.warn("project type not found! id:{}", classification);
             return null;
         }
         if (recommendLevel < 0) {

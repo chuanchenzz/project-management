@@ -75,4 +75,18 @@ public interface IProjectService {
      * @return
      */
     ProjectVO addProject(ProjectDO projectDO);
+
+    /**
+     * 审核项目
+     * @param id
+     * @return
+     */
+    Integer auditProject(int id, int status);
+
+    /**
+     * 通过id查找项目
+     * @param id
+     * @return
+     */
+    ProjectDO findProject(int id);
 }

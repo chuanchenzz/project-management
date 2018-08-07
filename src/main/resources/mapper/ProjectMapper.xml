@@ -19,4 +19,10 @@
         INSERT INTO project(name,description,location,money,master_graph,introduction,poster,classification,recommend_level,display_status,time) VALUES
         (name,description,location,money,masterGraph,introduction,poster,classification,recommendLevel,displayStatus,time);
     </insert>
+    <select id="findProjectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM project WHERE id = #{id};
+    </select>
+    <update id="updateDisplayStatus">
+        UPDATE project SET display_status = #{status};
+    </update>
 </mapper>
