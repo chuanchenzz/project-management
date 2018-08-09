@@ -3,6 +3,8 @@ package com.outsource.dao;
 import com.outsource.model.ProjectDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -28,4 +30,11 @@ public interface ProjectDao {
      * @return
      */
     int updateDisplayStatus(@Param("id") int id, @Param("status") int status);
+
+    /**
+     * 查找项目列表
+     * @param projectTypeId
+     * @return
+     */
+    List<ProjectDO> pagesProjectByTypeId(@Param("projectTypeId") int projectTypeId);
 }

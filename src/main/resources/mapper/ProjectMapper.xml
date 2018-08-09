@@ -25,4 +25,7 @@
     <update id="updateDisplayStatus">
         UPDATE project SET display_status = #{status};
     </update>
+    <select id="pagesProjectByTypeId" parameterType="java.lang.Integer" resultMap="BaseResult">
+        SELECT * FROM project WHERE display_status = 1 ORDER BY time DESC;
+    </select>
 </mapper>

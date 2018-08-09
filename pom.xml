@@ -21,6 +21,7 @@
     <spring.mybatis.version>1.3.0</spring.mybatis.version>
     <redis.clients.version>2.9.0</redis.clients.version>
     <commons-codec-version>1.10</commons-codec-version>
+    <mybatis.page.helper>5.1.4</mybatis.page.helper>
   </properties>
 
   <profiles>
@@ -100,6 +101,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
       <version>${spring.boot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>${mybatis.page.helper}</version>
     </dependency>
   </dependencies>
 

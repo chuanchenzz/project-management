@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author chuanchen
@@ -149,6 +146,23 @@ public class ProjectController {
         }
         Integer auditResult = projectService.auditProject(id, status);
         return auditResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(auditResult, StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/pages",method = RequestMethod.GET)
+    public JsonResponse<Pages<ProjectVO>> findProjectList(@RequestParam("project_type_id") int projectTypeId, @RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize){
+        if(pageNumber <= 0 || pageSize <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer totalCount = projectService.findProjectCount(projectTypeId);
+        if(totalCount == null){
+            return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!");
+        }
+        int totalPage = totalCount % pageSize == 0 ? totalCount / pageSize : totalCount / pageSize + 1;
+        if((pageNumber - 1) * pageSize >= totalCount){
+            return new JsonResponse<>(new Pages<>(totalPage,totalCount,Collections.emptyList()),StatusCodeEnum.SUCCESS.getCode());
+        }
+        List<ProjectVO> projectVOList = projectService.findProjectList(projectTypeId,pageNumber,pageSize);
+        return new JsonResponse<>(new Pages<>(totalPage,totalCount,projectVOList),StatusCodeEnum.SUCCESS.getCode());
     }
 
     private ProjectDO projectArgsIsValid(String name, String location, String money, String mobile, String masterGraph, String introduction, String poster, int classification, String description, int recommendLevel) {

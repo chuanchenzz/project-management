@@ -1,5 +1,6 @@
 package com.outsource.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.outsource.dao.ProjectDao;
 import com.outsource.dao.ProjectTypeDao;
 import com.outsource.model.*;
@@ -254,5 +255,50 @@ public class ProjectServiceImpl implements IProjectService {
             }
         }
         return projectDO;
+    }
+
+    @Override
+    public Integer findProjectCount(int projectTypeId) {
+        String projectIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectTypeId);
+        Long size;
+        try {
+            size = redisOperation.zSetSize(projectIdListKey);
+        } catch (Exception e) {
+            logger.error(String.format("redisOperation.zSetSize(%s) error!",projectIdListKey),e);
+            return null;
+        }
+        return Integer.valueOf(String.valueOf(size));
+    }
+
+    @Override
+    public List<ProjectVO> findProjectList(int projectTypeId, int pageNumber, int pageSize) {
+        List<Integer> projectIdList = findProjectIdList(projectTypeId,pageNumber,pageSize);
+        if(CollectionUtils.isEmpty(projectIdList)){
+            return Collections.emptyList();
+        }
+        List<ProjectVO> projectList = new ArrayList<>(projectIdList.size());
+        for (Integer projectId : projectIdList){
+            ProjectDO project = findProject(projectId);
+            if(project != null){
+                projectList.add(new ProjectVO(project));
+            }
+        }
+        return projectList;
+    }
+
+    @Override
+    public List<Integer> findProjectIdList(int projectTypeId, int pageNumber, int pageSize) {
+        String projectIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectTypeId);
+        List<Integer> projectIdList = redisOperation.rangeZSet(projectIdListKey,pageNumber,pageSize);
+        if(CollectionUtils.isEmpty(projectIdList)){
+            List<ProjectDO> projectList = projectDao.pagesProjectByTypeId(projectTypeId);
+            if(CollectionUtils.isEmpty(projectList)){
+                return Collections.emptyList();
+            }
+            for (ProjectDO project : projectList){
+                redisOperation.addZSetItem(projectIdListKey,project.getId(),project.getTime().getTime());
+            }
+        }
+        return redisOperation.rangeZSet(projectIdListKey,pageNumber,pageSize);
     }
 }

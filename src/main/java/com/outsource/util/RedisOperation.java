@@ -3,6 +3,8 @@ package com.outsource.util;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,5 +45,15 @@ public class RedisOperation {
 
     public Long removeZSetEntry(String key, Object value){
         return redisTemplate.opsForZSet().remove(key,value);
+    }
+
+    public Long zSetSize(String key){
+        return redisTemplate.opsForZSet().size(key);
+    }
+
+    public List<Integer> rangeZSet(String key, int pageNumber, int pageSize){
+        long offset = (pageNumber - 1) * pageSize;
+        Set<Integer> set = redisTemplate.opsForZSet().reverseRange(key,offset,pageSize);
+        return new ArrayList<>(set);
     }
 }

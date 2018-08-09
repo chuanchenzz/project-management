@@ -89,4 +89,29 @@ public interface IProjectService {
      * @return
      */
     ProjectDO findProject(int id);
+
+    /**
+     * 查找特定项目类型的项目数
+     * @param projectTypeId
+     * @return
+     */
+    Integer findProjectCount(int projectTypeId);
+
+    /**
+     * 分页查找项目
+     * @param projectTypeId
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<ProjectVO> findProjectList(int projectTypeId, int pageNumber, int pageSize);
+
+    /**
+     * 分页查找项目id列表
+     * @param projectTypeId
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<Integer> findProjectIdList(int projectTypeId, int pageNumber, int pageSize);
 }
