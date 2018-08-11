@@ -147,6 +147,39 @@ public class ProjectDO implements Serializable{
         this.time = time;
     }
 
+    public void update(ProjectDO projectDO){
+        if(projectDO == null){
+            return;
+        }
+        if(projectDO.getName() != null){
+            this.name = projectDO.getName();
+        }
+        if(projectDO.getDescription() != null){
+            this.description = projectDO.getDescription();
+        }
+        if(projectDO.getLocation() != null){
+            this.location = projectDO.getLocation();
+        }
+        if(projectDO.getMoney() != null){
+            this.money = projectDO.getMoney();
+        }
+        if(projectDO.getMobile() != null){
+            this.mobile = projectDO.getMobile();
+        }
+        if(projectDO.getMasterGraph() != null){
+            this.masterGraph = projectDO.getMasterGraph();
+        }
+        if(projectDO.getIntroduction() != null){
+            this.introduction = projectDO.getIntroduction();
+        }
+        if(projectDO.getPoster() != null){
+            this.poster = projectDO.getPoster();
+        }
+        if(projectDO.getRecommendLevel() != null){
+            this.recommendLevel = projectDO.getRecommendLevel();
+        }
+    }
+
     @Override
     public String toString() {
         return "ProjectDO{" +

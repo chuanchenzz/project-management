@@ -77,6 +77,13 @@ public interface IProjectService {
     ProjectVO addProject(ProjectDO projectDO);
 
     /**
+     * 更新项目
+     * @param projectDO
+     * @return
+     */
+    Integer updateProject(ProjectDO projectDO);
+
+    /**
      * 审核项目
      * @param id
      * @return

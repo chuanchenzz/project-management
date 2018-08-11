@@ -1,6 +1,8 @@
 package com.outsource.controller;
 
+import com.outsource.aop.AuthLevel;
 import com.outsource.constant.StatusCodeEnum;
+import com.outsource.interceptor.AuthEnum;
 import com.outsource.model.*;
 import com.outsource.service.IProjectService;
 import com.outsource.util.ImageUtils;
@@ -104,6 +106,20 @@ public class ProjectController {
         return projectVO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(projectVO, StatusCodeEnum.SUCCESS.getCode());
     }
 
+    @AuthLevel
+    @RequestMapping(value = "/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> updateProject(@PathVariable("id") int id,@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
+                                               @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
+                                               @RequestParam("poster") String poster, @RequestParam("description") String description,
+                                               @RequestParam("recommend_level") int recommendLevel){
+        ProjectDO projectDO;
+        if(id <= 0 || (projectDO = projectArgsIsValid(name, location, money, mobile, masterGraph, introduction, poster, 1, description, recommendLevel)) == null){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer updateResult = projectService.updateProject(projectDO);
+        return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
+    }
+
     @RequestMapping(value = "/images/{imageName}", method = RequestMethod.GET)
     public ResponseEntity findImage(@PathVariable("imageName") String imageName) {
         HttpHeaders headers = new HttpHeaders();
@@ -139,6 +155,7 @@ public class ProjectController {
         return resultMap;
     }
 
+    @AuthLevel(type = AuthEnum.REVIEW_MANAGER)
     @RequestMapping(value = "/audit/{id}", method = RequestMethod.POST)
     public JsonResponse<Integer> auditProject(@PathVariable("id") int id, @RequestParam("status") int status) {
         if (status != ProjectDO.DisplayStatusEnum.DISPLAY.code && status != ProjectDO.DisplayStatusEnum.NOT_DISPLAY.code) {

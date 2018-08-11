@@ -37,4 +37,11 @@ public interface ProjectDao {
      * @return
      */
     List<ProjectDO> pagesProjectByTypeId(@Param("projectTypeId") int projectTypeId);
+
+    /**
+     * 更新项目
+     * @param projectDO
+     * @return
+     */
+    int updateProject(ProjectDO projectDO);
 }

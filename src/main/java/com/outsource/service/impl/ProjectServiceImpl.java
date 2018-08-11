@@ -223,6 +223,23 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
+    public Integer updateProject(ProjectDO projectDO) {
+        int updateResult = projectDao.updateProject(projectDO);
+        if(updateResult <= 0){
+            logger.warn("update project fail! projectDO:{}",projectDO);
+            return null;
+        }
+        ProjectDO oldProject = findProject(projectDO.getId());
+        if(oldProject == null){
+            return null;
+        }
+        oldProject.update(projectDO);
+        String projectKey = KeyUtil.generateKey(RedisKey.PROJECT,projectDO.getId());
+        redisOperation.set(projectKey,oldProject);
+        return projectDO.getId();
+    }
+
+    @Override
     public Integer auditProject(int id, int status) {
         ProjectDO projectDO = findProject(id);
         if(projectDO == null || status == projectDO.getDisplayStatus()){
