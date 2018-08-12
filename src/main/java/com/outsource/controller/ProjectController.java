@@ -47,7 +47,7 @@ public class ProjectController {
         }
         // 校验项目类型是否存在
         ProjectTypeDO projectType = projectService.findProjectType(name);
-        if (projectType != null) {
+        if (projectType != null && projectType.getStatus().equals(ProjectTypeDO.StatusEnum.DISPLAY)) {
             logger.warn("the projectType has exist,name:{}", name);
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "项目类型已经存在!");
         }

@@ -19,7 +19,7 @@
         INSERT INTO project_type(name,description,parent_id,status,create_time) VALUES (#{name},#{description},#{parentId},#{status},#{createTime});
     </insert>
     <update id="updateProjectType" parameterType="com.outsource.model.ProjectTypeDO">
-        UPDATE project_type set name = #{projectType.name},description = #{projectType.description};
+        UPDATE project_type set name = #{name},description = #{description};
     </update>
     <update id="updateStatus">
         UPDATE project_type set status = #{status} WHERE id = #{id};
