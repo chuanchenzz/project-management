@@ -16,7 +16,7 @@ public class CommentDO implements Serializable{
     private Integer projectId;
     private String content;
     private Integer status;
-    private String customerMark;
+    private String customerRemark;
     private Date time;
 
     public CommentDO(){}
@@ -95,12 +95,12 @@ public class CommentDO implements Serializable{
         this.status = status;
     }
 
-    public String getCustomerMark() {
-        return customerMark;
+    public String getCustomerRemark() {
+        return customerRemark;
     }
 
-    public void setCustomerMark(String customerMark) {
-        this.customerMark = customerMark;
+    public void setCustomerRemark(String customerRemark) {
+        this.customerRemark = customerRemark;
     }
 
     public Date getTime() {
@@ -121,7 +121,7 @@ public class CommentDO implements Serializable{
                 ", projectId=" + projectId +
                 ", content='" + content + '\'' +
                 ", status=" + status +
-                ", customerMark='" + customerMark + '\'' +
+                ", customerRemark='" + customerRemark + '\'' +
                 ", time=" + time +
                 '}';
     }

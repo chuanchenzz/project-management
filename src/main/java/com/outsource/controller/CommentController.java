@@ -10,10 +10,7 @@ import com.outsource.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author chuanchen
@@ -42,7 +39,20 @@ public class CommentController {
         commentDO.setEmail(email);
         commentDO.setProjectId(projectId);
         commentDO.setContent(content);
+        commentDO = commentService.addComment(commentDO);
+        return commentDO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(commentDO.getId(),StatusCodeEnum.SUCCESS.getCode());
+    }
 
-        return null;
+    @RequestMapping(value = "/audit/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> auditComment(@PathVariable("id") int id,@RequestParam("customer_remark") String customerRemark,@RequestParam("status") int status){
+        if(StringUtils.isEmpty(customerRemark) || id <= 0 || (status != CommentDO.DisplayStatusEnum.NOT_DISPLAY.code && status != CommentDO.DisplayStatusEnum.DISPLAY.code)){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        CommentDO commentDO = commentService.findComment(id);
+        if(commentDO == null){
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"评论未找到!");
+        }
+        Integer auditResult = commentService.auditComment(id,status,customerRemark);
+        return auditResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(auditResult,StatusCodeEnum.SUCCESS.getCode());
     }
 }

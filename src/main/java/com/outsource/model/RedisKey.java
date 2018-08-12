@@ -33,4 +33,8 @@ public class RedisKey {
 
     public static final String TOPIC_SCAN_COUNT = "topic_scan_count_";
 
+    public static final String COMMENT = "comment_";
+
+    public static final String PROJECT_COMMENT_ID_LIST = "project_comment_id_list_";
+
 }

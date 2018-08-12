@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.outsource.dao.TopicDao">
+    <resultMap id="BaseResultMap" type="com.outsource.model.TopicDO">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="customer_remark" property="customerRemark" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="DATE"/>
+    </resultMap>
+    <insert id="addComment" parameterType="com.outsource.model.CommentDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comment(name,mobile,email,project_id,content,status,time) VALUES (#{name},#{mobile},#{email},#{projectId},#{content},#{status},#{time});
+    </insert>
+    <select id="getCommentById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM comment WHERE id = #{id};
+    </select>
+    <update id="auditComment">
+        UPDATE comment SET status = #{status},SET customer_remark = #{customer_remark} WHERE id = #{id};
+    </update>
+</mapper>
