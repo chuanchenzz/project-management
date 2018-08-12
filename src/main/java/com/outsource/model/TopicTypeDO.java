@@ -10,7 +10,7 @@ import java.util.Date;
  * @author chuanchen
  */
 public class TopicTypeDO implements Serializable{
-    private static final Logger logger = LoggerFactory.getLogger(TopicTypeDO.class);
+    private static final long serialVerUID = -1L;
 
     private Integer id;
     private String name;
@@ -18,6 +18,37 @@ public class TopicTypeDO implements Serializable{
     private Integer status;
 
     public TopicTypeDO(){}
+
+    public TopicTypeDO(String name,Date time,Integer status){
+        this.name = name;
+        this.time = time;
+        this.status = status;
+    }
+
+    public enum StatusEnum{
+        /**
+         * 显示状态
+         */
+        DISPLAY(1,"显示"),
+        /**
+         * 隐藏状态
+         */
+        HIDDEN(0,"隐藏");
+        public Integer statusCode;
+        public String description;
+        StatusEnum(Integer statusCode, String description){
+            this.statusCode = statusCode;
+            this.description =description;
+        }
+
+        @Override
+        public String toString() {
+            return "StatusEnum{" +
+                    "statusCode=" + statusCode +
+                    ", description='" + description + '\'' +
+                    '}';
+        }
+    }
 
     public Integer getId() {
         return id;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.outsource.dao.TopicTypeDao">
+    <resultMap id="BaseResultMap" type="com.outsource.model.TopicTypeDO">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="DATE"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+    <insert id="addTopicType" parameterType="com.outsource.model.TopicTypeDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO topic_type(name,time,status) VALUES (#{name},#{time},#{status});
+    </insert>
+    <select id="getTopicTypeByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM topic_type WHERE name = #{name};
+    </select>
+    <select id="getTopicTypeById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM topic_type WHERE id = #{id};
+    </select>
+    <update id="updateTopicTypeName">
+        UPDATE topic_type SET name = #{name} WHERE id = #{id};
+    </update>
+    <update id="updateTopicTypeStatus">
+        UPDATE topic_type SET status = #{status} WHERE id = #{id};
+    </update>
+</mapper>

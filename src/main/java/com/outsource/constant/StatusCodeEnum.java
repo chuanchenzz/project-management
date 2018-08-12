@@ -33,7 +33,12 @@ public enum StatusCodeEnum {
     /**
      * 用户未登陆
      */
-    NOT_LOGIN(403,"用户未登陆!");
+    NOT_LOGIN(403,"用户未登陆!"),
+
+    /**
+     * 重复添加
+     */
+    REPEAT_ADD(444,"重复添加!");
 
     StatusCodeEnum(Integer code, String description){
         this.code = code;

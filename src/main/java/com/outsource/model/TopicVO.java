@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * @author chuanchen
  */
-public class TopicDO implements Serializable{
+public class TopicVO implements Serializable{
     private static final long serialVersionUID = -1L;
 
     private Integer id;
@@ -14,41 +14,17 @@ public class TopicDO implements Serializable{
     private Date pubTime;
     private String authorName;
     private String content;
-    private Integer displayStatus;
     private Integer classification;
 
-    public TopicDO(){}
+    public TopicVO(){}
 
-    public TopicDO(String title, String authorName,String content,int classification){
-        this.title = title;
-        this.authorName = authorName;
-        this.content = content;
-        this.classification = classification;
-    }
-
-    public enum StatusEnum{
-        /**
-         * 显示状态
-         */
-        DISPLAY(1,"显示"),
-        /**
-         * 隐藏状态
-         */
-        HIDDEN(0,"隐藏");
-        public Integer statusCode;
-        public String description;
-        StatusEnum(Integer statusCode, String description){
-            this.statusCode = statusCode;
-            this.description =description;
-        }
-
-        @Override
-        public String toString() {
-            return "StatusEnum{" +
-                    "statusCode=" + statusCode +
-                    ", description='" + description + '\'' +
-                    '}';
-        }
+    public TopicVO(final TopicDO topicDO){
+        this.id = topicDO.getId();
+        this.title = topicDO.getTitle();
+        this.pubTime = topicDO.getPubTime();
+        this.authorName = topicDO.getAuthorName();
+        this.content = topicDO.getContent();
+        this.classification = topicDO.getClassification();
     }
 
     public Integer getId() {
@@ -91,14 +67,6 @@ public class TopicDO implements Serializable{
         this.content = content;
     }
 
-    public Integer getDisplayStatus() {
-        return displayStatus;
-    }
-
-    public void setDisplayStatus(Integer displayStatus) {
-        this.displayStatus = displayStatus;
-    }
-
     public Integer getClassification() {
         return classification;
     }
@@ -109,13 +77,12 @@ public class TopicDO implements Serializable{
 
     @Override
     public String toString() {
-        return "TopicDO{" +
+        return "TopicVO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", pubTime='" + pubTime + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", content='" + content + '\'' +
-                ", displayStatus=" + displayStatus +
                 ", classification=" + classification +
                 '}';
     }

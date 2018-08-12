@@ -24,4 +24,11 @@ public class RedisKey {
     public static final String PROJECT = "project_";
 
     public static final String PROJECT_ID_LIST = "project_id_list_";
+
+    public static final String TOPIC_TYPE = "topic_type_";
+
+    public static final String TOPIC = "topic_";
+
+    public static final String TOPIC_ID_LIST = "topic_id_list_";
+
 }
