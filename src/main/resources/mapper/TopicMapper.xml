@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.outsource.dao.TopicDao">
-    <resultMap id="resultMap" type="com.outsource.model.TopicDO">
+    <resultMap id="BaseResultMap" type="com.outsource.model.TopicDO">
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="author_name" property="authorName" jdbcType="VARCHAR"/>
@@ -13,7 +13,7 @@
     <insert id="addTopic" parameterType="com.outsource.model.TopicDO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO topic(title,author_name,content,display_status,classification,pub_time) VALUES (#{title},#{authorName},#{content},#{displayStatus},#{classification},#{pubTime});
     </insert>
-    <select id="getTopicById" parameterType="java.lang.Integer" resultMap="resultMap">
+    <select id="getTopicById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT * FROM topic WHERE id = #{id};
     </select>
     <update id="updateTopicStatus">
