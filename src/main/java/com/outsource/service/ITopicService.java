@@ -50,4 +50,26 @@ public interface ITopicService {
      * @return
      */
     TopicDO addTopic(TopicDO topicDO);
+
+    /**
+     * 查找文章
+     * @param id
+     * @return
+     */
+    TopicDO findTopic(int id);
+
+    /**
+     * 审核文章
+     * @param id
+     * @param status
+     * @return
+     */
+    Integer auditTopic(int id, int status);
+
+    /**
+     * 更新文章信息
+     * @param topicDO
+     * @return
+     */
+    Integer updateTopic(TopicDO topicDO);
 }

@@ -60,4 +60,42 @@ public class TopicController {
         topicDO = topicService.addTopic(topicDO);
         return topicDO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内存错误!") : new JsonResponse<>(new TopicVO(topicDO), StatusCodeEnum.SUCCESS.getCode());
     }
+
+    @RequestMapping(value = "/audit/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> auditTopic(@PathVariable("id") int id, @RequestParam("status") int status){
+        boolean invalidArgs = id <= 0 || (status != TopicDO.StatusEnum.HIDDEN.statusCode && status != TopicDO.StatusEnum.DISPLAY.statusCode);
+        if(invalidArgs){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        TopicDO topicDO = topicService.findTopic(id);
+        if(topicDO == null || topicDO.getDisplayStatus() == status){
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"操作错误!");
+        }
+        Integer updateResult = topicService.auditTopic(id,status);
+        return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> updateTopic(@PathVariable("id") int id, @RequestParam(value = "title",required = false) String title,@RequestParam(value = "author_name",required = false) String authorName,
+                                             @RequestParam(value = "classification",required = false) int classification,@RequestParam(value = "content",required = false) String content){
+        if (StringUtils.isAllEmpty(title, authorName, content) || classification <= 0 || id <= 0) {
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
+        }
+        TopicDO topicDO = topicService.findTopic(id);
+        if(topicDO == null){
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"文章未找到!");
+        }
+        if(StringUtils.isNotEmpty(title)) {
+            topicDO.setTitle(title);
+        }
+        if(StringUtils.isNotEmpty(authorName)) {
+            topicDO.setAuthorName(authorName);
+        }
+        topicDO.setClassification(classification);
+        if(StringUtils.isNotEmpty(content)) {
+            topicDO.setContent(content);
+        }
+        Integer updateResult = topicService.updateTopic(topicDO);
+        return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
+    }
 }

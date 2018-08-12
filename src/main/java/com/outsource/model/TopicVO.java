@@ -15,6 +15,7 @@ public class TopicVO implements Serializable{
     private String authorName;
     private String content;
     private Integer classification;
+    private Integer scanCount;
 
     public TopicVO(){}
 
@@ -25,6 +26,7 @@ public class TopicVO implements Serializable{
         this.authorName = topicDO.getAuthorName();
         this.content = topicDO.getContent();
         this.classification = topicDO.getClassification();
+        this.scanCount = 0;
     }
 
     public Integer getId() {
@@ -55,6 +57,14 @@ public class TopicVO implements Serializable{
         return authorName;
     }
 
+    public Integer getScanCount() {
+        return scanCount;
+    }
+
+    public void setScanCount(Integer scanCount) {
+        this.scanCount = scanCount;
+    }
+
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
     }
@@ -80,10 +90,11 @@ public class TopicVO implements Serializable{
         return "TopicVO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", pubTime='" + pubTime + '\'' +
+                ", pubTime=" + pubTime +
                 ", authorName='" + authorName + '\'' +
                 ", content='" + content + '\'' +
                 ", classification=" + classification +
+                ", scanCount=" + scanCount +
                 '}';
     }
 }

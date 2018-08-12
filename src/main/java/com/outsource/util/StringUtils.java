@@ -33,6 +33,18 @@ public class StringUtils {
         return !isEmpty(strArray);
     }
 
+    public static boolean isAllEmpty(String... strArray){
+        if(strArray == null){
+            return true;
+        }
+        for (String str : strArray){
+            if(!org.springframework.util.StringUtils.isEmpty(str)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static String generateJsonSession(String account) {
         return account + System.currentTimeMillis();
     }

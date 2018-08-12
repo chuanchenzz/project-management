@@ -107,6 +107,24 @@ public class TopicDO implements Serializable{
         this.classification = classification;
     }
 
+    public void update(final TopicDO topicDO){
+        if(topicDO == null){
+            return;
+        }
+        if(topicDO.getTitle() != null){
+            this.title = topicDO.getTitle();
+        }
+        if(topicDO.getAuthorName() != null){
+            this.authorName = topicDO.getAuthorName();
+        }
+        if(topicDO.getClassification() != null){
+            this.classification = topicDO.getClassification();
+        }
+        if(topicDO.getContent() != null){
+            this.content = topicDO.getContent();
+        }
+    }
+
     @Override
     public String toString() {
         return "TopicDO{" +
