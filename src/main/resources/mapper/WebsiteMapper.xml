@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.outsource.dao.TopicDao">
+    <resultMap id="BaseResultMap" type="com.outsource.model.Website">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="fav_icon" property="favIcon" jdbcType="VARCHAR"/>
+        <result column="logo" property="logo" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="DATE"/>
+    </resultMap>
+    <select id="getWebsite" resultMap="BaseResultMap">
+        SELECT * FROM website;
+    </select>
+    <insert id="addWebsiteConfig">
+        INSERT INTO website(id,name,fav_icon,logo,time) VALUES (#{id},#{name},#{favIcon},#{logo},#{time});
+    </insert>
+    <update id="updateWebsiteConfig" parameterType="com.outsource.model.Website">
+        UPDATE website SET name = #{name},fav_icon = #{favIcon},logo = #{logo},time = #{time} WHERE id = #{id};
+    </update>
+</mapper>

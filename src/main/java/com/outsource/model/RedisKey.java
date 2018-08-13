@@ -37,4 +37,6 @@ public class RedisKey {
 
     public static final String PROJECT_COMMENT_ID_LIST = "project_comment_id_list_";
 
+    public static final String WEBSITE = "website";
+
 }
