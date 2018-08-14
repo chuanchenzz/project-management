@@ -1,6 +1,5 @@
 package com.outsource.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.outsource.dao.ProjectDao;
 import com.outsource.dao.ProjectTypeDao;
 import com.outsource.model.*;

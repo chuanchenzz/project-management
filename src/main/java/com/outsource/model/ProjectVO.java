@@ -1,6 +1,7 @@
 package com.outsource.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author chuanchen
@@ -12,9 +13,14 @@ public class ProjectVO implements Serializable{
     private String name;
     private String description;
     private String location;
+    private String money;
+    private String mobile;
+    private String masterGraph;
+    private String introduction;
+    private String poster;
     private Integer classification;
-    private Integer recommendLevel;
     private Integer displayStatus;
+    private Date time;
 
     public ProjectVO(){}
 
@@ -23,9 +29,14 @@ public class ProjectVO implements Serializable{
         this.name = projectDO.getName();
         this.description = projectDO.getDescription();
         this.location = projectDO.getLocation();
+        this.money = projectDO.getMoney();
+        this.mobile = projectDO.getMobile();
+        this.masterGraph = projectDO.getMasterGraph();
+        this.introduction = projectDO.getIntroduction();
+        this.poster = projectDO.getPoster();
         this.classification = projectDO.getClassification();
-        this.recommendLevel = projectDO.getRecommendLevel();
         this.displayStatus = projectDO.getDisplayStatus();
+        this.time = projectDO.getTime();
     }
 
     public Integer getId() {
@@ -68,12 +79,52 @@ public class ProjectVO implements Serializable{
         this.classification = classification;
     }
 
-    public Integer getRecommendLevel() {
-        return recommendLevel;
+    public String getMoney() {
+        return money;
     }
 
-    public void setRecommendLevel(Integer recommendLevel) {
-        this.recommendLevel = recommendLevel;
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getMasterGraph() {
+        return masterGraph;
+    }
+
+    public void setMasterGraph(String masterGraph) {
+        this.masterGraph = masterGraph;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public Integer getDisplayStatus() {
@@ -91,9 +142,14 @@ public class ProjectVO implements Serializable{
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", location='" + location + '\'' +
+                ", money='" + money + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", masterGraph='" + masterGraph + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", poster='" + poster + '\'' +
                 ", classification=" + classification +
-                ", recommendLevel=" + recommendLevel +
                 ", displayStatus=" + displayStatus +
+                ", time=" + time +
                 '}';
     }
 }

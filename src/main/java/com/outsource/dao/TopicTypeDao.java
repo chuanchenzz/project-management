@@ -4,6 +4,8 @@ import com.outsource.model.TopicTypeDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -45,4 +47,10 @@ public interface TopicTypeDao {
      * @return
      */
     int updateTopicTypeStatus(@PathVariable("id") int id, @Param("status") int status);
+
+    /**
+     * 获取文章分类id列表
+     * @return
+     */
+    List<TopicTypeDO> listTopicType();
 }

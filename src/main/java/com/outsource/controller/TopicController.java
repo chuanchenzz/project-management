@@ -7,6 +7,9 @@ import com.outsource.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -27,6 +30,12 @@ public class TopicController {
         }
         topicTypeDO = topicService.addTopicType(name);
         return topicTypeDO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(new TopicTypeVO(topicTypeDO), StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/type/list",method = RequestMethod.GET)
+    public JsonResponse<List<TopicTypeVO>> findTopicTypeList(){
+        List<TopicTypeVO> topicTypeList = topicService.findTopicTypeList();
+        return new JsonResponse<>(topicTypeList,StatusCodeEnum.SUCCESS.getCode());
     }
 
     @RequestMapping(value = "/type/{id}", method = RequestMethod.POST)
@@ -54,11 +63,28 @@ public class TopicController {
         }
         TopicDO topicDO = new TopicDO(title, authorName, content, classification);
         TopicTypeDO topicTypeDO = topicService.findTopicType(classification);
-        if (topicTypeDO == null || topicTypeDO.getStatus().equals(TopicTypeDO.StatusEnum.HIDDEN)) {
+        if (topicTypeDO == null || topicTypeDO.getStatus().equals(TopicTypeDO.StatusEnum.HIDDEN.statusCode)) {
             return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(), "文章类型未找到!");
         }
         topicDO = topicService.addTopic(topicDO);
         return topicDO == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内存错误!") : new JsonResponse<>(new TopicVO(topicDO), StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/pages",method = RequestMethod.GET)
+    public JsonResponse<Pages<TopicVO>> findTopicList(@RequestParam("topic_type_id") int topicTypeId,@RequestParam("page_number") int pageNumber,@RequestParam("page_size") int pageSize){
+        if(topicTypeId <= 0 || pageNumber <= 0 || pageSize <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer totalCount = topicService.findTopicCount(topicTypeId);
+        if(totalCount == null){
+            return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!");
+        }
+        int totalPage = totalCount % pageSize == 0 ? totalCount / pageSize : totalCount / pageSize + 1;
+        if((pageNumber - 1) * pageSize >= totalCount){
+            return new JsonResponse<>(new Pages<>(totalPage,totalCount, Collections.emptyList()),StatusCodeEnum.SUCCESS.getCode());
+        }
+        List<TopicVO> topicList = topicService.findTopicList(topicTypeId,pageNumber,pageSize);
+        return new JsonResponse<>(new Pages<>(totalPage,totalCount,topicList),StatusCodeEnum.SUCCESS.getCode());
     }
 
     @RequestMapping(value = "/audit/{id}",method = RequestMethod.POST)

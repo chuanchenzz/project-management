@@ -22,4 +22,7 @@
     <update id="updateTopicTypeStatus">
         UPDATE topic_type SET status = #{status} WHERE id = #{id};
     </update>
+    <select id="listTopicType" resultMap="BaseResultMap">
+        SELECT * FROM topic_type WHERE status = 1;
+    </select>
 </mapper>

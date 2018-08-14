@@ -2,6 +2,10 @@ package com.outsource.service;
 
 import com.outsource.model.TopicDO;
 import com.outsource.model.TopicTypeDO;
+import com.outsource.model.TopicTypeVO;
+import com.outsource.model.TopicVO;
+
+import java.util.List;
 
 /**
  * @author chuanchen
@@ -72,4 +76,41 @@ public interface ITopicService {
      * @return
      */
     Integer updateTopic(TopicDO topicDO);
+
+    /**
+     * 获取文章分类id列表
+     * @return
+     */
+    List<Integer> findTopicTypeIdList();
+
+    /**
+     * 获取文章分类列表
+     * @return
+     */
+    List<TopicTypeVO> findTopicTypeList();
+
+    /**
+     * 查找具体文章类型下的文章数
+     * @param topicTypeId
+     * @return
+     */
+    Integer findTopicCount(int topicTypeId);
+
+    /**
+     * 获取文章id列表
+     * @param topicTypeId
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<Integer> findTopicIdList(int topicTypeId, int pageNumber, int pageSize);
+
+    /**
+     * 获取文章列表
+     * @param topicTypeId
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<TopicVO> findTopicList(int topicTypeId, int pageNumber, int pageSize);
 }

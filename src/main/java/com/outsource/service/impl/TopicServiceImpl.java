@@ -2,9 +2,7 @@ package com.outsource.service.impl;
 
 import com.outsource.dao.TopicDao;
 import com.outsource.dao.TopicTypeDao;
-import com.outsource.model.RedisKey;
-import com.outsource.model.TopicDO;
-import com.outsource.model.TopicTypeDO;
+import com.outsource.model.*;
 import com.outsource.service.ITopicService;
 import com.outsource.util.KeyUtil;
 import com.outsource.util.RedisOperation;
@@ -14,8 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author chuanchen
@@ -46,7 +48,7 @@ public class TopicServiceImpl implements ITopicService {
 
     @Override
     public TopicTypeDO addTopicType(String name) {
-        TopicTypeDO topicTypeDO = new TopicTypeDO(name, new Date(), TopicTypeDO.StatusEnum.HIDDEN.statusCode);
+        TopicTypeDO topicTypeDO = new TopicTypeDO(name, new Date(), TopicTypeDO.StatusEnum.DISPLAY.statusCode);
         try {
             topicTypeDao.addTopicType(topicTypeDO);
         } catch (DuplicateKeyException e) {
@@ -115,7 +117,7 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public TopicDO addTopic(TopicDO topicDO) {
         topicDO.setPubTime(new Date());
-        topicDO.setDisplayStatus(TopicDO.StatusEnum.HIDDEN.statusCode);
+        topicDO.setDisplayStatus(TopicDO.StatusEnum.DISPLAY.statusCode);
         try {
             topicDao.addTopic(topicDO);
         } catch (Exception e) {
@@ -199,5 +201,82 @@ public class TopicServiceImpl implements ITopicService {
         String topicKey = KeyUtil.generateKey(RedisKey.TOPIC,topicId);
         redisOperation.set(topicKey,topic);
         return topicId;
+    }
+
+    @Override
+    public List<Integer> findTopicTypeIdList() {
+        List<Integer> topicTypeIdList = redisOperation.rangeZSet(RedisKey.TOPIC_TYPE_ID_LIST,1,Integer.valueOf(String.valueOf(redisOperation.zSetSize(RedisKey.TOPIC_TYPE_ID_LIST))));
+        if(CollectionUtils.isEmpty(topicTypeIdList)){
+            List<TopicTypeDO> topicTypeList = topicTypeDao.listTopicType();
+            if(CollectionUtils.isEmpty(topicTypeList)){
+                return null;
+            }
+            for (TopicTypeDO topicTypeDO : topicTypeList){
+                redisOperation.addZSetItem(RedisKey.TOPIC_TYPE_ID_LIST,topicTypeDO.getId(),topicTypeDO.getTime().getTime());
+            }
+            topicTypeIdList = redisOperation.rangeZSet(RedisKey.TOPIC_TYPE_ID_LIST,1,Integer.valueOf(String.valueOf(redisOperation.zSetSize(RedisKey.TOPIC_TYPE_ID_LIST))));
+        }
+        return topicTypeIdList;
+    }
+
+    @Override
+    public List<TopicTypeVO> findTopicTypeList() {
+        List<Integer> topicTypeIdList = findTopicTypeIdList();
+        if(topicTypeIdList == null){
+            return Collections.emptyList();
+        }
+        List<TopicTypeVO> topicTypeList = new ArrayList<>(topicTypeIdList.size());
+        for (Integer topicTypeId : topicTypeIdList){
+            TopicTypeDO topicTypeDO = findTopicType(topicTypeId);
+            if(topicTypeDO != null){
+                topicTypeList.add(new TopicTypeVO(topicTypeDO));
+            }
+        }
+        return topicTypeList;
+    }
+
+    @Override
+    public Integer findTopicCount(int topicTypeId) {
+        String topicIdListKey = KeyUtil.generateKey(RedisKey.TOPIC_ID_LIST,topicTypeId);
+        Long size;
+        try {
+            size = redisOperation.zSetSize(topicIdListKey);
+        } catch (Exception e) {
+            logger.error(String.format("redisOperation.zSetSize(%s) error!",topicIdListKey),e);
+            return null;
+        }
+        return Integer.valueOf(String.valueOf(size));
+    }
+
+    @Override
+    public List<Integer> findTopicIdList(int topicTypeId, int pageNumber, int pageSize) {
+        String topicIdListKey = KeyUtil.generateKey(RedisKey.TOPIC_ID_LIST,topicTypeId);
+        List<Integer> topicIdList = redisOperation.rangeZSet(topicIdListKey,pageNumber,pageSize);
+        if(CollectionUtils.isEmpty(topicIdList)){
+            List<TopicDO> topicList = topicDao.listProjectByTypeId(topicTypeId);
+            if(CollectionUtils.isEmpty(topicList)){
+                return Collections.emptyList();
+            }
+            for (TopicDO topic : topicList){
+                redisOperation.addZSetItem(topicIdListKey,topic.getId(),topic.getPubTime().getTime());
+            }
+        }
+        return redisOperation.rangeZSet(topicIdListKey,pageNumber,pageSize);
+    }
+
+    @Override
+    public List<TopicVO> findTopicList(int topicTypeId, int pageNumber, int pageSize) {
+        List<Integer> topicIdList = findTopicIdList(topicTypeId,pageNumber,pageSize);
+        if(CollectionUtils.isEmpty(topicIdList)){
+            return Collections.emptyList();
+        }
+        List<TopicVO> topicList = new ArrayList<>(topicIdList.size());
+        for (Integer topicId : topicIdList){
+            TopicDO topic = findTopic(topicId);
+            if(topic != null){
+                topicList.add(new TopicVO(topic));
+            }
+        }
+        return topicList;
     }
 }

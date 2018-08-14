@@ -3,6 +3,8 @@ package com.outsource.dao;
 import com.outsource.model.TopicDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -35,4 +37,11 @@ public interface TopicDao {
      * @return
      */
     int updateTopic(TopicDO topicDO);
+
+    /**
+     * 获取具体文章类型下的文章
+     * @param topicTypeId
+     * @return
+     */
+    List<TopicDO> listProjectByTypeId(@Param("topicTypeId") int topicTypeId);
 }
