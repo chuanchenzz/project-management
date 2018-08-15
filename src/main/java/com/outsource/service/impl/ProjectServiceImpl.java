@@ -317,4 +317,22 @@ public class ProjectServiceImpl implements IProjectService {
         }
         return redisOperation.rangeZSet(projectIdListKey,pageNumber,pageSize);
     }
+
+    @Override
+    public Integer deleteProject(int projectId) {
+        ProjectDO projectDO = findProject(projectId);
+        if(projectDO == null){
+            return null;
+        }
+        int deleteResult = projectDao.updateDisplayStatus(projectId,ProjectDO.DisplayStatusEnum.DELETE.code);
+        if(deleteResult <= 0){
+            return null;
+        }
+        projectDO.setDisplayStatus(ProjectDO.DisplayStatusEnum.DELETE.code);
+        String projectKey = KeyUtil.generateKey(RedisKey.PROJECT,projectId);
+        redisOperation.set(projectKey,projectDO);
+        String projectIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectDO.getClassification());
+        redisOperation.removeZSetEntry(projectIdListKey,projectId);
+        return projectId;
+    }
 }

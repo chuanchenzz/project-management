@@ -160,12 +160,22 @@ public class ProjectController {
 
     @AuthLevel(type = AuthEnum.REVIEW_MANAGER)
     @RequestMapping(value = "/audit/{id}", method = RequestMethod.POST)
-    public JsonResponse<Integer> auditProject(@PathVariable("id") int id, @RequestParam("status") int status) {
+    public JsonResponse<Integer> auditProject(HttpServletRequest request,@PathVariable("id") int id, @RequestParam("status") int status) {
         if (status != ProjectDO.DisplayStatusEnum.DISPLAY.code && status != ProjectDO.DisplayStatusEnum.NOT_DISPLAY.code) {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
         Integer auditResult = projectService.auditProject(id, status);
         return auditResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(auditResult, StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @AuthLevel(type = AuthEnum.REVIEW_MANAGER)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> deleteProject(HttpServletRequest request,@PathVariable("id") int id){
+        if(id <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer deleteResult = projectService.deleteProject(id);
+        return deleteResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(deleteResult,StatusCodeEnum.SUCCESS.getCode());
     }
 
     @RequestMapping(value = "/pages",method = RequestMethod.GET)

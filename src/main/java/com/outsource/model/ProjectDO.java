@@ -34,7 +34,9 @@ public class ProjectDO implements Serializable{
         /**
          * 显示
          */
-        DISPLAY(1,"显示");
+        DISPLAY(1,"显示"),
+
+        DELETE(2,"删除");
 
         DisplayStatusEnum(int code, String description){
             this.code = code;

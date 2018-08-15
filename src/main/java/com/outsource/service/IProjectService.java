@@ -121,4 +121,11 @@ public interface IProjectService {
      * @return
      */
     List<Integer> findProjectIdList(int projectTypeId, int pageNumber, int pageSize);
+
+    /**
+     * 删除项目
+     * @param projectId
+     * @return
+     */
+    Integer deleteProject(int projectId);
 }
