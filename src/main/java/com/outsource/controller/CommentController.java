@@ -3,6 +3,7 @@ package com.outsource.controller;
 import com.outsource.constant.StatusCodeEnum;
 import com.outsource.model.CommentDO;
 import com.outsource.model.JsonResponse;
+import com.outsource.model.Pages;
 import com.outsource.model.ProjectDO;
 import com.outsource.service.ICommentService;
 import com.outsource.service.IProjectService;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author chuanchen
@@ -54,5 +57,17 @@ public class CommentController {
         }
         Integer auditResult = commentService.auditComment(id,status,customerRemark);
         return auditResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(auditResult,StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/{project_id}/pages",method = RequestMethod.GET)
+    public JsonResponse<Pages<CommentDO>> findCommentListByProjectId(@PathVariable("project_id") int projectId,@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize){
+        if(projectId <= 0 || pageNumber <= 0 || pageSize <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer commentCount = commentService.findCommentCountByProjectId(projectId);
+        if((pageNumber - 1) * pageSize >= commentCount){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        return null;
     }
 }

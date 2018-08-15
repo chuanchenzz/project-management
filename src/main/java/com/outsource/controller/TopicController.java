@@ -53,7 +53,7 @@ public class TopicController {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
         Integer deleteResult = topicService.deleteTopicType(id);
-        return deleteResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!") : new JsonResponse<>(deleteResult, StatusCodeEnum.SUCCESS.getCode());
+        return deleteResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "文章类型不存在或该类型下还有文章!") : new JsonResponse<>(deleteResult, StatusCodeEnum.SUCCESS.getCode());
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)

@@ -10,8 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author chuanchen
@@ -76,5 +80,21 @@ public class CommentServiceImpl implements ICommentService{
             redisOperation.removeZSetEntry(commentIdListKey,id);
         }
         return id;
+    }
+
+    @Override
+    public Integer findCommentCountByProjectId(int projectId) {
+        String commentIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_COMMENT_ID_LIST,projectId);
+        if(redisOperation.hasKey(commentIdListKey)){
+            return Integer.valueOf(String.valueOf(redisOperation.zSetSize(commentIdListKey)));
+        }
+        List<CommentDO> commentList = commentDao.listCommentByProjectId(projectId);
+        if(CollectionUtils.isEmpty(commentList)){
+            return 0;
+        }
+        for (CommentDO comment : commentList){
+            redisOperation.addZSetItem(commentIdListKey,comment.getId(),comment.getTime().getTime());
+        }
+        return commentList.size();
     }
 }

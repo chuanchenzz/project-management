@@ -39,9 +39,9 @@ public class AdminController {
 
     @AuthLevel(type = AuthEnum.ACCOUNT_MANAGR)
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public JsonResponse<Integer> updateAdmin(HttpServletRequest request,@PathVariable("id") int id, @RequestParam("password") String password, @RequestParam("level") Integer level) {
-        boolean isValidParams = (id > 0 && !StringUtils.isEmpty(password) && level >= 0);
-        if (!isValidParams) {
+    public JsonResponse<Integer> updateAdmin(HttpServletRequest request,@PathVariable("id") int id, @RequestParam(value = "password",required = false) String password, @RequestParam(value = "level",required = false) Integer level) {
+        boolean isInvalidParams = (id <= 0 || (StringUtils.isEmpty(password) && level <= 0));
+        if (isInvalidParams) {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
         Integer adminId = adminService.updateAdmin(id, password, level);

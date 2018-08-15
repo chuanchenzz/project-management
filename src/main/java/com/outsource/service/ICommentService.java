@@ -29,4 +29,11 @@ public interface ICommentService {
      * @return
      */
     Integer auditComment(int id, int status, String customerRemark);
+
+    /**
+     * 查找留言数通过项目id
+     * @param projectId
+     * @return
+     */
+    Integer findCommentCountByProjectId(int projectId);
 }
