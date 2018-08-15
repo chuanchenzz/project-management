@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -93,8 +94,9 @@ public class ProjectController {
         return new JsonResponse<>(projectTypeVOList, StatusCodeEnum.SUCCESS.getCode());
     }
 
+    @AuthLevel
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public JsonResponse<ProjectVO> addProject(@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
+    public JsonResponse<ProjectVO> addProject(HttpServletRequest request,@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
                                               @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
                                               @RequestParam("poster") String poster, @RequestParam("classification") int classification, @RequestParam("description") String description,
                                               @RequestParam("recommend_level") int recommendLevel) {
@@ -108,7 +110,7 @@ public class ProjectController {
 
     @AuthLevel
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
-    public JsonResponse<Integer> updateProject(@PathVariable("id") int id,@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
+    public JsonResponse<Integer> updateProject(HttpServletRequest request,@PathVariable("id") int id, @RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
                                                @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
                                                @RequestParam("poster") String poster, @RequestParam("description") String description,
                                                @RequestParam("recommend_level") int recommendLevel){
