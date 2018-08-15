@@ -96,11 +96,11 @@ public class ProjectController {
 
     @AuthLevel
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public JsonResponse<ProjectVO> addProject(HttpServletRequest request,@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
+    public JsonResponse<ProjectVO> addProject(HttpServletRequest request,@RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("start_money") String startMoney, @RequestParam("end_money") String endMoney,
                                               @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
                                               @RequestParam("poster") String poster, @RequestParam("classification") int classification, @RequestParam("description") String description,
                                               @RequestParam("recommend_level") int recommendLevel) {
-        ProjectDO projectDO = projectArgsIsValid(name, location, money, mobile, masterGraph, introduction, poster, classification, description, recommendLevel);
+        ProjectDO projectDO = projectArgsIsValid(name, location, startMoney,endMoney, mobile, masterGraph, introduction, poster, classification, description, recommendLevel);
         if (projectDO == null) {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
@@ -110,14 +110,15 @@ public class ProjectController {
 
     @AuthLevel
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
-    public JsonResponse<Integer> updateProject(HttpServletRequest request,@PathVariable("id") int id, @RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("money") String money,
+    public JsonResponse<Integer> updateProject(HttpServletRequest request,@PathVariable("id") int id, @RequestParam("name") String name, @RequestParam("location") String location, @RequestParam("start_money") String startMoney,@RequestParam("end_money") String endMoney,
                                                @RequestParam("mobile") String mobile, @RequestParam("master_graph") String masterGraph, @RequestParam("introduction") String introduction,
                                                @RequestParam("poster") String poster, @RequestParam("description") String description,
                                                @RequestParam("recommend_level") int recommendLevel){
         ProjectDO projectDO;
-        if(id <= 0 || (projectDO = projectArgsIsValid(name, location, money, mobile, masterGraph, introduction, poster, 1, description, recommendLevel)) == null){
+        if(id <= 0 || (projectDO = projectArgsIsValid(name, location, startMoney, endMoney, mobile, masterGraph, introduction, poster, 1, description, recommendLevel)) == null){
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
         }
+        projectDO.setId(id);
         Integer updateResult = projectService.updateProject(projectDO);
         return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
     }
@@ -184,17 +185,21 @@ public class ProjectController {
         return new JsonResponse<>(new Pages<>(totalPage,totalCount,projectVOList),StatusCodeEnum.SUCCESS.getCode());
     }
 
-    private ProjectDO projectArgsIsValid(String name, String location, String money, String mobile, String masterGraph, String introduction, String poster, int classification, String description, int recommendLevel) {
-        if (StringUtils.isEmpty(name, location, money, mobile, masterGraph, introduction, poster, description)) {
-            logger.warn("params is null! name:{}, location:{}, money:{},mobile:{},masterGraph:{},introduction:{},poster:{},description:{}", name, location, money, mobile, masterGraph, introduction, poster, description);
+    private ProjectDO projectArgsIsValid(String name, String location, String startMoney, String endMoney, String mobile, String masterGraph, String introduction, String poster, int classification, String description, int recommendLevel) {
+        if (StringUtils.isEmpty(name, location, startMoney, endMoney, mobile, masterGraph, introduction, poster, description)) {
+            logger.warn("params is null! name:{}, location:{}, startMoney:{}, endMoney:{},mobile:{},masterGraph:{},introduction:{},poster:{},description:{}", name, location, startMoney,endMoney, mobile, masterGraph, introduction, poster, description);
             return null;
         }
-        if (Long.valueOf(money) < 0) {
-            logger.warn("money param error! money:{}", money);
+        if (Long.valueOf(startMoney) < 0) {
+            logger.warn("money param error! startMoney:{}", startMoney);
+            return null;
+        }
+        if (Long.valueOf(endMoney) < 0) {
+            logger.warn("money param error! endMoney:{}", endMoney);
             return null;
         }
         if (classification <= 0) {
-            logger.warn("classification param error! money:{}", money);
+            logger.warn("classification param error! classification:{}", classification);
             return null;
         }
         ProjectTypeDO projectType = projectService.findProjectType(classification);
@@ -203,13 +208,14 @@ public class ProjectController {
             return null;
         }
         if (recommendLevel < 0) {
-            logger.warn("recommendLevel param error! money:{}", money);
+            logger.warn("recommendLevel param error! recommendLevel:{}", recommendLevel);
             return null;
         }
         ProjectDO project = new ProjectDO();
         project.setName(name);
         project.setLocation(location);
-        project.setMoney(money);
+        project.setStartMoney(startMoney);
+        project.setEndMoney(endMoney);
         project.setMobile(mobile);
         project.setMasterGraph(masterGraph);
         project.setIntroduction(introduction);

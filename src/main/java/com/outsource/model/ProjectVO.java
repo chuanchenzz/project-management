@@ -13,13 +13,15 @@ public class ProjectVO implements Serializable{
     private String name;
     private String description;
     private String location;
-    private String money;
+    private String startMoney;
+    private String endMoney;
     private String mobile;
     private String masterGraph;
     private String introduction;
     private String poster;
     private Integer classification;
     private Integer displayStatus;
+    private Integer recommendLevel;
     private Date time;
 
     public ProjectVO(){}
@@ -29,13 +31,15 @@ public class ProjectVO implements Serializable{
         this.name = projectDO.getName();
         this.description = projectDO.getDescription();
         this.location = projectDO.getLocation();
-        this.money = projectDO.getMoney();
+        this.startMoney = projectDO.getStartMoney();
+        this.endMoney = projectDO.getEndMoney();
         this.mobile = projectDO.getMobile();
         this.masterGraph = projectDO.getMasterGraph();
         this.introduction = projectDO.getIntroduction();
         this.poster = projectDO.getPoster();
         this.classification = projectDO.getClassification();
         this.displayStatus = projectDO.getDisplayStatus();
+        this.recommendLevel = projectDO.getRecommendLevel();
         this.time = projectDO.getTime();
     }
 
@@ -79,12 +83,20 @@ public class ProjectVO implements Serializable{
         this.classification = classification;
     }
 
-    public String getMoney() {
-        return money;
+    public String getStartMoney() {
+        return startMoney;
     }
 
-    public void setMoney(String money) {
-        this.money = money;
+    public void setStartMoney(String startMoney) {
+        this.startMoney = startMoney;
+    }
+
+    public String getEndMoney() {
+        return endMoney;
+    }
+
+    public void setEndMoney(String endMoney) {
+        this.endMoney = endMoney;
     }
 
     public String getMobile() {
@@ -135,6 +147,14 @@ public class ProjectVO implements Serializable{
         this.displayStatus = displayStatus;
     }
 
+    public Integer getRecommendLevel() {
+        return recommendLevel;
+    }
+
+    public void setRecommendLevel(Integer recommendLevel) {
+        this.recommendLevel = recommendLevel;
+    }
+
     @Override
     public String toString() {
         return "ProjectVO{" +
@@ -142,13 +162,15 @@ public class ProjectVO implements Serializable{
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", location='" + location + '\'' +
-                ", money='" + money + '\'' +
+                ", startMoney='" + startMoney + '\'' +
+                ", endMoney='" + endMoney + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", masterGraph='" + masterGraph + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", poster='" + poster + '\'' +
                 ", classification=" + classification +
                 ", displayStatus=" + displayStatus +
+                ", recommendLevel=" + recommendLevel +
                 ", time=" + time +
                 '}';
     }

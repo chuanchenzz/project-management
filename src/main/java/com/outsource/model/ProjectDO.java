@@ -13,7 +13,8 @@ public class ProjectDO implements Serializable{
     private String name;
     private String description;
     private String location;
-    private String money;
+    private String startMoney;
+    private String endMoney;
     private String mobile;
     private String masterGraph;
     private String introduction;
@@ -75,12 +76,20 @@ public class ProjectDO implements Serializable{
         this.location = location;
     }
 
-    public String getMoney() {
-        return money;
+    public String getStartMoney() {
+        return startMoney;
     }
 
-    public void setMoney(String money) {
-        this.money = money;
+    public void setStartMoney(String startMoney) {
+        this.startMoney = startMoney;
+    }
+
+    public String getEndMoney() {
+        return endMoney;
+    }
+
+    public void setEndMoney(String endMoney) {
+        this.endMoney = endMoney;
     }
 
     public String getMobile() {
@@ -160,8 +169,11 @@ public class ProjectDO implements Serializable{
         if(projectDO.getLocation() != null){
             this.location = projectDO.getLocation();
         }
-        if(projectDO.getMoney() != null){
-            this.money = projectDO.getMoney();
+        if(projectDO.getStartMoney() != null){
+            this.startMoney = projectDO.getStartMoney();
+        }
+        if(projectDO.getEndMoney() != null){
+            this.endMoney = projectDO.getEndMoney();
         }
         if(projectDO.getMobile() != null){
             this.mobile = projectDO.getMobile();
@@ -187,7 +199,8 @@ public class ProjectDO implements Serializable{
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", location='" + location + '\'' +
-                ", money='" + money + '\'' +
+                ", startMoney='" + startMoney + '\'' +
+                ", endMoney='" + endMoney + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", masterGraph='" + masterGraph + '\'' +
                 ", introduction='" + introduction + '\'' +

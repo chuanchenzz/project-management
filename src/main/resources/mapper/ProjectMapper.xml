@@ -6,7 +6,8 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="location" property="location" jdbcType="VARCHAR"/>
-        <result column="money" property="money" jdbcType="VARCHAR"/>
+        <result column="start_money" property="startMoney" jdbcType="VARCHAR"/>
+        <result column="end_money" property="endMoney" jdbcType="VARCHAR"/>
         <result column="master_graph" property="masterGraph" jdbcType="VARCHAR"/>
         <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
         <result column="poster" property="poster" jdbcType="VARCHAR"/>
@@ -16,7 +17,7 @@
         <result column="time" property="time" jdbcType="DATE"/>
     </resultMap>
     <insert id="insertProject" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO project(name,description,location,money,master_graph,introduction,poster,classification,recommend_level,display_status,time) VALUES (#{name},#{description},#{location},#{money},#{masterGraph},#{introduction},#{poster},#{classification},#{recommendLevel},#{displayStatus},#{time});
+        INSERT INTO project(name,description,location,start_money,end_money,master_graph,introduction,poster,classification,recommend_level,display_status,time) VALUES (#{name},#{description},#{location},#{startMoney}, #{endMoney},#{masterGraph},#{introduction},#{poster},#{classification},#{recommendLevel},#{displayStatus},#{time});
     </insert>
     <select id="findProjectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT * FROM project WHERE id = #{id};
@@ -35,8 +36,11 @@
         <if test="#{location} != null">
             ,location = #{location}
         </if>
-        <if test="#{money} != null">
-            ,money = #{money}
+        <if test="#{startMoney} != null">
+            ,start_money = #{startMoney}
+        </if>
+        <if test="#{endMoney} != null">
+            ,end_money = #{endMoney}
         </if>
         <if test="#{masterGraph} != null">
             ,master_graph = #{masterGraph}
