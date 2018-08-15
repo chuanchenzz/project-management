@@ -59,6 +59,7 @@ public class TopicServiceImpl implements ITopicService {
         }
         String topicTypeKey = KeyUtil.generateKey(RedisKey.TOPIC_TYPE, topicTypeDO.getId());
         redisOperation.set(topicTypeKey, topicTypeDO);
+        redisOperation.addZSetItem(RedisKey.TOPIC_TYPE_ID_LIST,topicTypeDO.getId(),topicTypeDO.getTime().getTime());
         return topicTypeDO;
     }
 
@@ -111,6 +112,7 @@ public class TopicServiceImpl implements ITopicService {
         String topicTypeKey = KeyUtil.generateKey(RedisKey.TOPIC_TYPE, id);
         topicTypeDO.setStatus(TopicTypeDO.StatusEnum.HIDDEN.statusCode);
         redisOperation.set(topicTypeKey, topicTypeDO);
+        redisOperation.removeZSetEntry(RedisKey.TOPIC_TYPE_ID_LIST,id);
         return id;
     }
 
