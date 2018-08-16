@@ -22,7 +22,19 @@
     <select id="listAdmin" resultMap="BaseResultMap">
         SELECT * FROM admin;
     </select>
-    <update id="updateAdmin">
-        UPDATE admin set password = #{password},level = #{level} WHERE id = #{id};
+    <update id="updateAdmin" parameterType="com.outsource.model.AdminDO">
+        UPDATE admin
+        <set>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="level != null">
+                level = #{level}
+            </if>
+        </set>
+        WHERE id = #{id};
     </update>
+    <delete id="deleteAdmin" parameterType="java.lang.Integer">
+        DELETE FROM admin WHERE id = #{id};
+    </delete>
 </mapper>

@@ -46,7 +46,7 @@ public interface TopicTypeDao {
      * @param status
      * @return
      */
-    int updateTopicTypeStatus(@PathVariable("id") int id, @Param("status") int status);
+    int updateTopicTypeStatus(@Param("id") int id, @Param("status") int status);
 
     /**
      * 获取文章分类id列表

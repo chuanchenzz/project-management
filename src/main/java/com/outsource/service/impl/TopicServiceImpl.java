@@ -165,12 +165,24 @@ public class TopicServiceImpl implements ITopicService {
         topicDO.setDisplayStatus(status);
         String topicKey = KeyUtil.generateKey(RedisKey.TOPIC, id);
         redisOperation.set(topicKey, topicDO);
-        String topicIdListKey = KeyUtil.generateKey(RedisKey.TOPIC_ID_LIST, topicDO.getClassification());
-        if (status == TopicDO.StatusEnum.DISPLAY.statusCode) {
-            redisOperation.addZSetItem(topicIdListKey, id, topicDO.getPubTime().getTime());
-        } else if (status == TopicDO.StatusEnum.HIDDEN.statusCode) {
-            redisOperation.removeZSetEntry(topicIdListKey, id);
+        return id;
+    }
+
+    @Override
+    public Integer deleteTopic(int id) {
+        TopicDO topicDO = findTopic(id);
+        if(topicDO == null){
+            return null;
         }
+        int updateRow = topicDao.updateTopicStatus(id,TopicDO.StatusEnum.DELETE.statusCode);
+        if(updateRow <= 0){
+            return null;
+        }
+        topicDO.setDisplayStatus(TopicDO.StatusEnum.DELETE.statusCode);
+        String topicKey = KeyUtil.generateKey(RedisKey.TOPIC,id);
+        redisOperation.set(topicKey,topicDO);
+        String topicIdListKey = KeyUtil.generateKey(RedisKey.TOPIC_ID_LIST,topicDO.getClassification());
+        redisOperation.removeZSetEntry(topicIdListKey,topicDO.getId());
         return id;
     }
 

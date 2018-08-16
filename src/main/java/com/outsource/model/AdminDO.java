@@ -18,6 +18,10 @@ public class AdminDO implements Serializable{
 
     public AdminDO(){}
 
+    public AdminDO(int id){
+        this.id = id;
+    }
+
     public AdminDO(String account, String password, Integer level){
         this.account = account;
         this.password = password;

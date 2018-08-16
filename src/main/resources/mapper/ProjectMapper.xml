@@ -26,37 +26,39 @@
         UPDATE project SET display_status = #{status};
     </update>
     <update id="updateProject" parameterType="com.outsource.model.ProjectDO">
-        UPDATE project SET
-        <if test="#{name} != null">
-          name = #{name}
-        </if>
-        <if test="#{description} != null">
-            ,description = #{description}
-        </if>
-        <if test="#{location} != null">
-            ,location = #{location}
-        </if>
-        <if test="#{startMoney} != null">
-            ,start_money = #{startMoney}
-        </if>
-        <if test="#{endMoney} != null">
-            ,end_money = #{endMoney}
-        </if>
-        <if test="#{masterGraph} != null">
-            ,master_graph = #{masterGraph}
-        </if>
-        <if test="#{introduction} != null">
-            ,introduction = #{introduction}
-        </if>
-        <if test="#{poster} != null">
-            ,poster = #{poster}
-        </if>
-        <if test="#{recommendLevel} != null">
-            ,recommend_level = #{recommendLevel}
-        </if>
+        UPDATE project
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="location != null">
+                location = #{location},
+            </if>
+            <if test="startMoney != null">
+                start_money = #{startMoney},
+            </if>
+            <if test="endMoney != null">
+                end_money = #{endMoney},
+            </if>
+            <if test="masterGraph != null">
+                master_graph = #{masterGraph},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            <if test="poster != null">
+                poster = #{poster},
+            </if>
+            <if test="recommendLevel != null">
+                recommend_level = #{recommendLevel}
+            </if>
+        </set>
         WHERE id = #{id};
     </update>
     <select id="pagesProjectByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        SELECT * FROM project WHERE display_status = 1 ORDER BY time DESC;
+        SELECT * FROM project WHERE display_status IN(0,1) ORDER BY time DESC;
     </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.outsource.service;
 
+import com.outsource.model.AdminDO;
 import com.outsource.model.AdminVO;
 
 import java.util.List;
@@ -10,12 +11,10 @@ import java.util.List;
 public interface IAdminService {
     /**
      * 更新密码或者权限
-     * @param id
-     * @param password
-     * @param level
+     * @param adminDO
      * @return
      */
-    Integer updateAdmin(int id, String password, int level);
+    Integer updateAdmin(AdminDO adminDO);
 
     /**
      * 管理员登录
@@ -53,4 +52,11 @@ public interface IAdminService {
      * @return
      */
     List<AdminVO> findAdminList();
+
+    /**
+     * 删除管理员
+     * @param id
+     * @return
+     */
+    Integer deleteAdmin(int id);
 }

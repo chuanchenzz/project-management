@@ -206,6 +206,10 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public ProjectVO addProject(ProjectDO projectDO) {
+        ProjectTypeDO projectType = findProjectType(projectDO.getId());
+        if(projectType == null){
+            return null;
+        }
         projectDO.setTime(new Date());
         projectDO.setDisplayStatus(ProjectDO.DisplayStatusEnum.NOT_DISPLAY.code);
         try {
@@ -218,6 +222,10 @@ public class ProjectServiceImpl implements IProjectService {
         redisOperation.set(projectKey,projectDO);
         String projectIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectDO.getClassification());
         redisOperation.addZSetItem(projectIdListKey,projectDO.getId(),projectDO.getTime().getTime());
+        if(projectType.getParentId() != null && projectType.getParentId() > 0){
+            String mainProjectIdKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectType.getParentId());
+            redisOperation.addZSetItem(mainProjectIdKey,projectDO.getId(),projectDO.getTime().getTime());
+        }
         return new ProjectVO(projectDO);
     }
 

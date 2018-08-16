@@ -11,12 +11,10 @@ import java.util.List;
 public interface AdminDao {
     /**
      * 更新管理员信息
-     * @param id
-     * @param password
-     * @param level
+     * @param adminDO
      * @return
      */
-    int updateAdmin(@Param("id") int id, @Param("password") String password, @Param("level") int level);
+    int updateAdmin(AdminDO adminDO);
 
     /**
      * 通过id获取AmidnDO对象
@@ -52,4 +50,11 @@ public interface AdminDao {
      * @return
      */
     List<AdminDO> listAdmin();
+
+    /**
+     * 删除管理员
+     * @param id
+     * @return
+     */
+    int deleteAdmin(@Param("id") int id);
 }

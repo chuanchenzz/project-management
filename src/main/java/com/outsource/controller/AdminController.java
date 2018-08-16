@@ -3,6 +3,7 @@ package com.outsource.controller;
 import com.outsource.aop.AuthLevel;
 import com.outsource.constant.StatusCodeEnum;
 import com.outsource.interceptor.AuthEnum;
+import com.outsource.model.AdminDO;
 import com.outsource.model.AdminVO;
 import com.outsource.model.JsonResponse;
 import com.outsource.service.IAdminService;
@@ -44,11 +45,28 @@ public class AdminController {
         if (isInvalidParams) {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(), "参数错误!");
         }
-        Integer adminId = adminService.updateAdmin(id, password, level);
+        AdminDO admin = new AdminDO(id);
+        if(password != null){
+            admin.setPassword(password);
+        }
+        if(level != null){
+            admin.setLevel(level);
+        }
+        Integer adminId = adminService.updateAdmin(admin);
         if (adminId == null) {
             return new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(), "内部错误!");
         }
         return new JsonResponse<>(adminId,StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @AuthLevel(type = AuthEnum.ACCOUNT_MANAGR)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> deleteAdmin(HttpServletRequest request,@PathVariable("id") int id){
+        if(id <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer deleteResult = adminService.deleteAdmin(id);
+        return deleteResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"删除失败!") : new JsonResponse<>(deleteResult,StatusCodeEnum.SUCCESS.getCode());
     }
 
     @AuthLevel(type = AuthEnum.ACCOUNT_MANAGR)

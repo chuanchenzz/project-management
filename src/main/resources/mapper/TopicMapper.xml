@@ -17,25 +17,27 @@
         SELECT * FROM topic WHERE id = #{id};
     </select>
     <select id="listProjectByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        SELECT * FROM topic WHERE classification = #{topicTypeId} and display_status = 1 ORDER BY pub_time DESC;
+        SELECT * FROM topic WHERE classification = #{topicTypeId} and display_status IN(0,1) ORDER BY pub_time DESC;
     </select>
     <update id="updateTopicStatus">
         UPDATE topic SET display_status = #{status} WHERE id = #{id};
     </update>
     <update id="updateTopic">
-        UPDATE topic SET
-        <if test="#{title != null}">
-            title = #{title}
-        </if>
-        <if test="#{authorName != null}">
-            ,author_name = #{authorName}
-        </if>
-        <if test="#{content != null}">
-            ,content = #{content}
-        </if>
-        <if test="#{classification != null}">
-            ,classification = #{classification}
-        </if>
+        UPDATE topic
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="authorName != null">
+                author_name = #{authorName},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="classification != null">
+                classification = #{classification}
+            </if>
+        </set>
         WHERE id = #{id};
     </update>
 </mapper>

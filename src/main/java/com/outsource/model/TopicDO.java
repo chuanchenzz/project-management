@@ -34,7 +34,11 @@ public class TopicDO implements Serializable{
         /**
          * 隐藏状态
          */
-        HIDDEN(0,"隐藏");
+        HIDDEN(0,"隐藏"),
+        /**
+         * 删除状态
+         */
+        DELETE(2,"删除");
         public Integer statusCode;
         public String description;
         StatusEnum(Integer statusCode, String description){

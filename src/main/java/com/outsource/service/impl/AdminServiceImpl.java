@@ -36,12 +36,14 @@ public class AdminServiceImpl implements IAdminService {
     StringRedisOperation stringRedisOperation;
 
     @Override
-    public Integer updateAdmin(int id, String password, int level) {
-        int updateResult = adminDao.updateAdmin(id, password, level);
+    public Integer updateAdmin(AdminDO adminDO) {
+
+        int updateResult = adminDao.updateAdmin(adminDO);
         if (updateResult <= 0) {
-            logger.warn("update admin error! id:{}", id);
+            logger.warn("update admin error! admin:{}", adminDO);
             return null;
         }
+        Integer id = adminDO.getId();
         String adminKey = KeyUtil.generateKey(RedisKey.ADMIN, id);
         AdminDO admin = (AdminDO) redisOperation.get(adminKey);
         if (admin == null) {
@@ -51,8 +53,12 @@ public class AdminServiceImpl implements IAdminService {
                 return null;
             }
         } else {
-            admin.setLevel(level);
-            admin.setPassword(password);
+            if(adminDO.getLevel() != null) {
+                admin.setLevel(adminDO.getLevel());
+            }
+            if(!StringUtils.isEmpty(adminDO.getPassword())) {
+                admin.setPassword(adminDO.getPassword());
+            }
         }
         redisOperation.set(adminKey, admin);
         return id;
@@ -135,5 +141,24 @@ public class AdminServiceImpl implements IAdminService {
             adminVOList.add(new AdminVO(adminDO.getId(), adminDO.getAccount(),adminDO.getLevel()));
         }
         return adminVOList;
+    }
+
+    @Override
+    public Integer deleteAdmin(int id) {
+        int deleteRow = adminDao.deleteAdmin(id);
+        if(deleteRow <= 0){
+            logger.warn("delete admin fail, may be admin not found! id:{}",id);
+            return null;
+        }
+        String adminKey = KeyUtil.generateKey(RedisKey.ADMIN,id);
+        redisOperation.deleteKey(adminKey);
+        String sessionKey = KeyUtil.generateKey(RedisKey.ADMIN_ID_SESSION,id);
+        if(stringRedisOperation.hasKey(sessionKey)){
+            String expireSession = stringRedisOperation.get(sessionKey);
+            stringRedisOperation.delete(sessionKey);
+            String idKey = KeyUtil.generateKey(RedisKey.SESSION,expireSession);
+            stringRedisOperation.delete(idKey);
+        }
+        return id;
     }
 }

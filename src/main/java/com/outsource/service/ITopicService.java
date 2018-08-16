@@ -71,6 +71,13 @@ public interface ITopicService {
     Integer auditTopic(int id, int status);
 
     /**
+     * 删除文章
+     * @param id
+     * @return
+     */
+    Integer deleteTopic(int id);
+
+    /**
      * 更新文章信息
      * @param topicDO
      * @return

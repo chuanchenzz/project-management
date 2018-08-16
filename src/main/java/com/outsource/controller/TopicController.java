@@ -101,6 +101,15 @@ public class TopicController {
         return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
     }
 
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> deleteTopic(@PathVariable("id") int id){
+        if(id <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer deleteResult = topicService.deleteTopic(id);
+        return deleteResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(deleteResult,StatusCodeEnum.SUCCESS.getCode());
+    }
+
     @RequestMapping(value = "/{id}",method = RequestMethod.POST)
     public JsonResponse<Integer> updateTopic(@PathVariable("id") int id, @RequestParam(value = "title",required = false) String title,@RequestParam(value = "author_name",required = false) String authorName,
                                              @RequestParam(value = "classification",required = false) int classification,@RequestParam(value = "content",required = false) String content){
