@@ -120,4 +120,11 @@ public interface ITopicService {
      * @return
      */
     List<TopicVO> findTopicList(int topicTypeId, int pageNumber, int pageSize);
+
+    /**
+     * 文章浏览数加一
+     * @param topicId
+     * @return
+     */
+    Integer incrementScanCount(int topicId);
 }

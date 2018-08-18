@@ -133,4 +133,17 @@ public class TopicController {
         Integer updateResult = topicService.updateTopic(topicDO);
         return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
     }
+
+    @RequestMapping(value = "/scan_count/{topic_id}",method = RequestMethod.POST)
+    public JsonResponse<Integer> incrementScanCount(@PathVariable("topic_id") int topicId){
+        if(topicId <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        TopicDO topicDO = topicService.findTopic(topicId);
+        if(topicDO == null){
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"文章未找到!");
+        }
+        Integer scanCount = topicService.incrementScanCount(topicId);
+        return scanCount == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"操作失败!") : new JsonResponse<>(scanCount,StatusCodeEnum.SUCCESS.getCode());
+    }
 }

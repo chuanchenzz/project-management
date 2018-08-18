@@ -245,7 +245,7 @@ public class TopicServiceImpl implements ITopicService {
             if(topicTypeDO != null){
                 TopicTypeVO topicTypeVO = new TopicTypeVO(topicTypeDO);
                 topicTypeVO.setTopicCount(findTopicCount(topicTypeDO.getId()));
-                topicTypeList.add(new TopicTypeVO(topicTypeDO));
+                topicTypeList.add(topicTypeVO);
             }
         }
         return topicTypeList;
@@ -294,5 +294,16 @@ public class TopicServiceImpl implements ITopicService {
             }
         }
         return topicList;
+    }
+
+    @Override
+    public Integer incrementScanCount(int topicId) {
+        String topicScanCountKey = KeyUtil.generateKey(RedisKey.TOPIC_SCAN_COUNT,topicId);
+        try {
+            return stringRedisOperation.increment(topicScanCountKey);
+        } catch (Exception e) {
+            logger.error(String.format("increment operation fail! topicId:%d",topicId),e);
+            return null;
+        }
     }
 }

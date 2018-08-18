@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -79,10 +80,10 @@ public class CommentController {
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
         }
         Integer commentCount = commentService.findCommentCount();
-        if((pageNumber - 1) * pageSize >= commentCount){
-            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
-        }
         int totalNumber = commentCount % pageSize == 0 ? commentCount / pageSize : commentCount / pageSize + 1;
+        if((pageNumber - 1) * pageSize >= commentCount){
+            return new JsonResponse<>(new Pages<>(totalNumber,commentCount, Collections.emptyList()),StatusCodeEnum.SUCCESS.getCode());
+        }
         List<CommentDO> commentList = commentService.findCommentList(pageNumber,pageSize);
         return new JsonResponse<>(new Pages<>(totalNumber,commentCount,commentList),StatusCodeEnum.SUCCESS.getCode());
     }

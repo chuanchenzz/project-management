@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -75,12 +74,6 @@ public class CommentServiceImpl implements ICommentService{
         commentDO.setCustomerRemark(customerRemark);
         String commentKey = KeyUtil.generateKey(RedisKey.COMMENT,id);
         redisOperation.set(commentKey,commentDO);
-        String commentIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_COMMENT_ID_LIST,commentDO.getProjectId());
-        if(status == CommentDO.DisplayStatusEnum.DISPLAY.code){
-            redisOperation.addZSetItem(commentIdListKey,id,commentDO.getTime().getTime());
-        }else if(status == CommentDO.DisplayStatusEnum.NOT_DISPLAY.code){
-            redisOperation.removeZSetEntry(commentIdListKey,id);
-        }
         return id;
     }
 

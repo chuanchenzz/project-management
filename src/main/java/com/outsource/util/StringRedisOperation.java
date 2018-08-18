@@ -33,4 +33,8 @@ public class StringRedisOperation {
     public boolean hasKey(String key){
         return stringRedisTemplate.hasKey(key);
     }
+
+    public Integer increment(String key){
+        return Integer.valueOf(String.valueOf(stringRedisTemplate.opsForValue().increment(key,1L)));
+    }
 }
