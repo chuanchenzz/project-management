@@ -38,4 +38,10 @@ public interface CommentDao {
      * @return
      */
     List<CommentDO> listCommentByProjectId(@Param("projectId") int projectId);
+
+    /**
+     * 获取所有留言
+     * @return
+     */
+    List<CommentDO> listComment();
 }

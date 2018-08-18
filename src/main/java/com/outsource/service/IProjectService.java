@@ -61,7 +61,7 @@ public interface IProjectService {
      * @param mainProjectTypeId
      * @return
      */
-    List<ProjectTypeDO> findChildProjectTypeList(int mainProjectTypeId);
+    List<ProjectTypeVO> findChildProjectTypeList(int mainProjectTypeId);
 
     /**
      * 获取所有的项目类型

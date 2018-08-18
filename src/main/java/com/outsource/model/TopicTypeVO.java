@@ -11,6 +11,7 @@ public class TopicTypeVO implements Serializable{
     private Integer id;
     private String name;
     private Date time;
+    private Integer topicCount;
 
     public TopicTypeVO(){}
 
@@ -44,12 +45,21 @@ public class TopicTypeVO implements Serializable{
         this.time = time;
     }
 
+    public Integer getTopicCount() {
+        return topicCount;
+    }
+
+    public void setTopicCount(Integer topicCount) {
+        this.topicCount = topicCount;
+    }
+
     @Override
     public String toString() {
         return "TopicTypeVO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", time=" + time +
+                ", topicCount=" + topicCount +
                 '}';
     }
 }

@@ -40,4 +40,6 @@ public class RedisKey {
     public static final String WEBSITE = "website";
 
     public static final String TOPIC_TYPE_ID_LIST = "topic_type_id_list";
+
+    public static final String COMMENT_ID_LIST = "comment_id_list";
 }

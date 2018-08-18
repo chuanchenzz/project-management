@@ -166,7 +166,7 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public List<ProjectTypeDO> findChildProjectTypeList(int mainProjectTypeId) {
+    public List<ProjectTypeVO> findChildProjectTypeList(int mainProjectTypeId) {
         String childListKey = KeyUtil.generateKey(RedisKey.PROJECT_TYPE_CHILD_ID_LIST, mainProjectTypeId);
         Set<Integer> childSetId = redisOperation.getZSet(childListKey);
         if (CollectionUtils.isEmpty(childSetId)) {
@@ -179,11 +179,13 @@ public class ProjectServiceImpl implements IProjectService {
             }
             childSetId = new TreeSet<>(childIdList);
         }
-        List<ProjectTypeDO> projectTypeDOList = new ArrayList<>(childSetId.size());
+        List<ProjectTypeVO> projectTypeDOList = new ArrayList<>(childSetId.size());
         for (Integer id : childSetId) {
             ProjectTypeDO projectType = findProjectType(id);
             if (projectType != null) {
-                projectTypeDOList.add(projectType);
+                ProjectTypeVO projectTypeVO = new ProjectTypeVO(projectType);
+                projectTypeVO.setProjectCount(findProjectCount(projectType.getId()));
+                projectTypeDOList.add(projectTypeVO);
             }
         }
         return projectTypeDOList;
@@ -206,7 +208,7 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public ProjectVO addProject(ProjectDO projectDO) {
-        ProjectTypeDO projectType = findProjectType(projectDO.getId());
+        ProjectTypeDO projectType = findProjectType(projectDO.getClassification());
         if(projectType == null){
             return null;
         }
@@ -259,12 +261,6 @@ public class ProjectServiceImpl implements IProjectService {
         projectDO.setDisplayStatus(status);
         String projectKey = KeyUtil.generateKey(RedisKey.PROJECT,id);
         redisOperation.set(projectKey,projectDO);
-        String projectListKey = KeyUtil.generateKey(RedisKey.PROJECT_ID_LIST,projectDO.getClassification());
-        if(status == ProjectDO.DisplayStatusEnum.DISPLAY.code){
-            redisOperation.addZSetItem(projectListKey,projectDO.getId(),projectDO.getTime().getTime());
-        }else if(status == ProjectDO.DisplayStatusEnum.NOT_DISPLAY.code){
-            redisOperation.removeZSetEntry(projectListKey,projectDO.getId());
-        }
         return id;
     }
 

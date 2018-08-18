@@ -243,6 +243,8 @@ public class TopicServiceImpl implements ITopicService {
         for (Integer topicTypeId : topicTypeIdList){
             TopicTypeDO topicTypeDO = findTopicType(topicTypeId);
             if(topicTypeDO != null){
+                TopicTypeVO topicTypeVO = new TopicTypeVO(topicTypeDO);
+                topicTypeVO.setTopicCount(findTopicCount(topicTypeDO.getId()));
                 topicTypeList.add(new TopicTypeVO(topicTypeDO));
             }
         }

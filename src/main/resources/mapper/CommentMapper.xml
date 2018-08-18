@@ -21,6 +21,9 @@
     <select id="listCommentByProjectId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT  * FROM comment WHERE project_id = #{projectId};
     </select>
+    <select id="listComment" resultMap="BaseResultMap">
+        SELECT * FROM comment;
+    </select>
     <update id="auditComment">
         UPDATE comment SET status = #{status},SET customer_remark = #{customer_remark} WHERE id = #{id};
     </update>

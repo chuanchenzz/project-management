@@ -14,7 +14,8 @@ public class ProjectTypeVO implements Serializable{
     private String description;
     private Integer parentId;
     private Integer status;
-    private List<ProjectTypeDO> childProjectTypeList;
+    private List<ProjectTypeVO> childProjectTypeList;
+    private Integer projectCount;
 
     public ProjectTypeVO(){}
 
@@ -66,12 +67,20 @@ public class ProjectTypeVO implements Serializable{
         this.status = status;
     }
 
-    public List<ProjectTypeDO> getChildProjectTypeList() {
+    public List<ProjectTypeVO> getChildProjectTypeList() {
         return childProjectTypeList;
     }
 
-    public void setChildProjectTypeList(List<ProjectTypeDO> childProjectTypeList) {
+    public void setChildProjectTypeList(List<ProjectTypeVO> childProjectTypeList) {
         this.childProjectTypeList = childProjectTypeList;
+    }
+
+    public Integer getProjectCount() {
+        return projectCount;
+    }
+
+    public void setProjectCount(Integer projectCount) {
+        this.projectCount = projectCount;
     }
 
     @Override
@@ -83,6 +92,7 @@ public class ProjectTypeVO implements Serializable{
                 ", parentId=" + parentId +
                 ", status=" + status +
                 ", childProjectTypeList=" + childProjectTypeList +
+                ", projectCount=" + projectCount +
                 '}';
     }
 }

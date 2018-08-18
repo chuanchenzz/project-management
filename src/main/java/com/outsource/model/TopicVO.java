@@ -16,6 +16,7 @@ public class TopicVO implements Serializable{
     private String content;
     private Integer classification;
     private Integer scanCount;
+    private Integer displayStatus;
 
     public TopicVO(){}
 
@@ -27,6 +28,7 @@ public class TopicVO implements Serializable{
         this.content = topicDO.getContent();
         this.classification = topicDO.getClassification();
         this.scanCount = 0;
+        this.displayStatus = topicDO.getDisplayStatus();
     }
 
     public Integer getId() {
@@ -85,6 +87,14 @@ public class TopicVO implements Serializable{
         this.classification = classification;
     }
 
+    public Integer getDisplayStatus() {
+        return displayStatus;
+    }
+
+    public void setDisplayStatus(Integer displayStatus) {
+        this.displayStatus = displayStatus;
+    }
+
     @Override
     public String toString() {
         return "TopicVO{" +
@@ -95,6 +105,7 @@ public class TopicVO implements Serializable{
                 ", content='" + content + '\'' +
                 ", classification=" + classification +
                 ", scanCount=" + scanCount +
+                ", displayStatus=" + displayStatus +
                 '}';
     }
 }

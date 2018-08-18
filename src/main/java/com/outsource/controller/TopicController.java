@@ -95,7 +95,7 @@ public class TopicController {
         }
         TopicDO topicDO = topicService.findTopic(id);
         if(topicDO == null || topicDO.getDisplayStatus() == status){
-            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"操作错误!");
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"文章不存在或已经是当前状态!");
         }
         Integer updateResult = topicService.auditTopic(id,status);
         return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());

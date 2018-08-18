@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,7 @@ public class CommentServiceImpl implements ICommentService{
         redisOperation.set(commentKey,commentDO);
         String commentIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_COMMENT_ID_LIST,commentDO.getProjectId());
         redisOperation.addZSetItem(commentIdListKey,commentDO.getId(),commentDO.getTime().getTime());
+        redisOperation.addZSetItem(RedisKey.COMMENT_ID_LIST,commentDO.getId(),commentDO.getTime().getTime());
         return commentDO;
     }
 
@@ -96,5 +98,76 @@ public class CommentServiceImpl implements ICommentService{
             redisOperation.addZSetItem(commentIdListKey,comment.getId(),comment.getTime().getTime());
         }
         return commentList.size();
+    }
+
+    @Override
+    public List<Integer> findCommentIdList(int projectId, int pageNumber, int pageSize) {
+        String commentIdListKey = KeyUtil.generateKey(RedisKey.PROJECT_COMMENT_ID_LIST,projectId);
+        List<Integer> commentIdList = redisOperation.rangeZSet(commentIdListKey,pageNumber,pageSize);
+        if(CollectionUtils.isEmpty(commentIdList)){
+            List<CommentDO> commentList = commentDao.listCommentByProjectId(projectId);
+            if(CollectionUtils.isEmpty(commentList)){
+                return Collections.emptyList();
+            }
+            for (CommentDO comment : commentList){
+                redisOperation.addZSetItem(commentIdListKey,comment.getId(),comment.getTime().getTime());
+            }
+            commentIdList = redisOperation.rangeZSet(commentIdListKey,pageNumber,pageSize);
+        }
+        return commentIdList;
+    }
+
+    @Override
+    public List<CommentDO> findCommentList(int projectId, int pageNumber, int pageSize) {
+        List<Integer> commentIdList = findCommentIdList(projectId,pageNumber,pageSize);
+        List<CommentDO> commentList = new ArrayList<>(commentIdList.size());
+        for (Integer commentId : commentIdList){
+            CommentDO comment = findComment(commentId);
+            if(comment != null){
+                commentList.add(comment);
+            }
+        }
+        return commentList;
+    }
+
+    @Override
+    public Integer findCommentCount() {
+        if(redisOperation.hasKey(RedisKey.COMMENT_ID_LIST)){
+            return Integer.valueOf(String.valueOf(redisOperation.zSetSize(RedisKey.COMMENT_ID_LIST)));
+        }
+        List<CommentDO> commentList = commentDao.listComment();
+        if(CollectionUtils.isEmpty(commentList)){
+            return 0;
+        }
+        for (CommentDO comment : commentList){
+            redisOperation.addZSetItem(RedisKey.COMMENT_ID_LIST,comment.getId(),comment.getTime().getTime());
+        }
+        return commentList.size();
+    }
+
+    @Override
+    public List<Integer> findCommentIdList(int pageNumber, int pageSize) {
+        Integer commentCount = findCommentCount();
+        if(commentCount == 0){
+            return Collections.emptyList();
+        }
+        List<Integer> commentIdList = redisOperation.rangeZSet(RedisKey.COMMENT_ID_LIST,pageNumber,pageSize);
+        if(CollectionUtils.isEmpty(commentIdList)){
+            return Collections.emptyList();
+        }
+        return commentIdList;
+    }
+
+    @Override
+    public List<CommentDO> findCommentList(int pageNumber, int pageSize) {
+        List<Integer> commentIdList = findCommentIdList(pageNumber,pageSize);
+        List<CommentDO> commentList = new ArrayList<>(commentIdList.size());
+        for(Integer commentId : commentIdList){
+            CommentDO comment = findComment(commentId);
+            if(comment != null){
+                commentList.add(comment);
+            }
+        }
+        return commentList;
     }
 }

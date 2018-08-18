@@ -2,6 +2,8 @@ package com.outsource.service;
 
 import com.outsource.model.CommentDO;
 
+import java.util.List;
+
 /**
  * @author chuanchen
  */
@@ -36,4 +38,44 @@ public interface ICommentService {
      * @return
      */
     Integer findCommentCountByProjectId(int projectId);
+
+    /**
+     * 分页查找留言id
+     * @param projectId
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<Integer> findCommentIdList(int projectId, int pageNumber, int pageSize);
+
+    /**
+     * 分页查找留言
+     * @param projectId
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<CommentDO> findCommentList(int projectId, int pageNumber, int pageSize);
+
+    /**
+     * 查找留言总数
+     * @return
+     */
+    Integer findCommentCount();
+
+    /**
+     * 分页查找留言id列表
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<Integer> findCommentIdList(int pageNumber, int pageSize);
+
+    /**
+     * 分页查找留言列表
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<CommentDO> findCommentList(int pageNumber, int pageSize);
 }

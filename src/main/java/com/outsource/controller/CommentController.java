@@ -68,6 +68,22 @@ public class CommentController {
         if((pageNumber - 1) * pageSize >= commentCount){
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
         }
-        return null;
+        int totalNumber = commentCount % pageSize == 0 ? commentCount / pageSize : commentCount / pageSize + 1;
+        List<CommentDO> commentList = commentService.findCommentList(projectId,pageNumber,pageSize);
+        return new JsonResponse<>(new Pages<>(totalNumber,commentCount,commentList),StatusCodeEnum.SUCCESS.getCode());
+    }
+
+    @RequestMapping(value = "/pages",method = RequestMethod.GET)
+    public JsonResponse<Pages<CommentDO>> findCommentList(@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize){
+        if(pageNumber <= 0 || pageSize <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer commentCount = commentService.findCommentCount();
+        if((pageNumber - 1) * pageSize >= commentCount){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        int totalNumber = commentCount % pageSize == 0 ? commentCount / pageSize : commentCount / pageSize + 1;
+        List<CommentDO> commentList = commentService.findCommentList(pageNumber,pageSize);
+        return new JsonResponse<>(new Pages<>(totalNumber,commentCount,commentList),StatusCodeEnum.SUCCESS.getCode());
     }
 }
