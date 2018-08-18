@@ -127,4 +127,11 @@ public interface ITopicService {
      * @return
      */
     Integer incrementScanCount(int topicId);
+
+    /**
+     * 查找文章浏览数
+     * @param topicId
+     * @return
+     */
+    Integer findTopicScanCount(int topicId);
 }

@@ -290,6 +290,8 @@ public class TopicServiceImpl implements ITopicService {
         for (Integer topicId : topicIdList){
             TopicDO topic = findTopic(topicId);
             if(topic != null){
+                TopicVO topicVO = new TopicVO(topic);
+                topicVO.setScanCount(findTopicScanCount(topic.getId()));
                 topicList.add(new TopicVO(topic));
             }
         }
@@ -305,5 +307,14 @@ public class TopicServiceImpl implements ITopicService {
             logger.error(String.format("increment operation fail! topicId:%d",topicId),e);
             return null;
         }
+    }
+
+    @Override
+    public Integer findTopicScanCount(int topicId) {
+        String topicScanCountKey = KeyUtil.generateKey(RedisKey.TOPIC_SCAN_COUNT,topicId);
+        if(stringRedisOperation.hasKey(topicScanCountKey)){
+            return Integer.valueOf(stringRedisOperation.get(topicScanCountKey));
+        }
+        return 0;
     }
 }
