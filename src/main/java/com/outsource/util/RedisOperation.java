@@ -53,7 +53,7 @@ public class RedisOperation {
 
     public List<Integer> rangeZSet(String key, int pageNumber, int pageSize){
         long offset = (pageNumber - 1) * pageSize;
-        Set<Integer> set = redisTemplate.opsForZSet().reverseRange(key,offset,pageSize);
+        Set<Integer> set = redisTemplate.opsForZSet().reverseRange(key,offset,offset + pageSize - 1);
         return new ArrayList<>(set);
     }
 }

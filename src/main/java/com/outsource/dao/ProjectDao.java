@@ -44,4 +44,14 @@ public interface ProjectDao {
      * @return
      */
     int updateProject(ProjectDO projectDO);
+
+    /**
+     * 查找项目id列表
+     * @param projectTypeIdList
+     * @param keyWord
+     * @param money
+     * @param location
+     * @return
+     */
+    List<Integer> searchProjectIdList(@Param("projectTypeIdList") List<Integer> projectTypeIdList, @Param("keyWord") String keyWord, @Param("money") Integer money,@Param("location") String location,@Param("recommendLevel") Integer recommendLevel);
 }

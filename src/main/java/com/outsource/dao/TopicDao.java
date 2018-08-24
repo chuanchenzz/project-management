@@ -43,5 +43,11 @@ public interface TopicDao {
      * @param topicTypeId
      * @return
      */
-    List<TopicDO> listProjectByTypeId(@Param("topicTypeId") int topicTypeId);
+    List<TopicDO> listTopicByTypeId(@Param("topicTypeId") int topicTypeId);
+
+    /**
+     * 获取所有的文章
+     * @return
+     */
+    List<TopicDO> listTopic();
 }

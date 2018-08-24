@@ -16,8 +16,11 @@
     <select id="getTopicById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT * FROM topic WHERE id = #{id};
     </select>
-    <select id="listProjectByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="listTopicByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT * FROM topic WHERE classification = #{topicTypeId} and display_status IN(0,1) ORDER BY pub_time DESC;
+    </select>
+    <select id="listTopic">
+        SELECT * FROM topic WHERE display_status != 2;
     </select>
     <update id="updateTopicStatus">
         UPDATE topic SET display_status = #{status} WHERE id = #{id};

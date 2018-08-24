@@ -76,7 +76,7 @@ public class TopicServiceImpl implements ITopicService {
             return null;
         }
         topicTypeDO.setName(name);
-        redisOperation.set(topicTypeKey, name);
+        redisOperation.set(topicTypeKey, topicTypeDO);
         return id;
     }
 
@@ -269,7 +269,7 @@ public class TopicServiceImpl implements ITopicService {
         String topicIdListKey = KeyUtil.generateKey(RedisKey.TOPIC_ID_LIST,topicTypeId);
         List<Integer> topicIdList = redisOperation.rangeZSet(topicIdListKey,pageNumber,pageSize);
         if(CollectionUtils.isEmpty(topicIdList)){
-            List<TopicDO> topicList = topicDao.listProjectByTypeId(topicTypeId);
+            List<TopicDO> topicList = topicDao.listTopicByTypeId(topicTypeId);
             if(CollectionUtils.isEmpty(topicList)){
                 return Collections.emptyList();
             }
@@ -292,10 +292,49 @@ public class TopicServiceImpl implements ITopicService {
             if(topic != null){
                 TopicVO topicVO = new TopicVO(topic);
                 topicVO.setScanCount(findTopicScanCount(topic.getId()));
-                topicList.add(new TopicVO(topic));
+                topicList.add(topicVO);
             }
         }
         return topicList;
+    }
+
+    @Override
+    public Pages<TopicVO> findTopicPage(int pageNumber, int pageSize) {
+        if(!redisOperation.hasKey(RedisKey.ALL_TOPIC_ID_LIST)){
+            if(redisOperation.hasKey(RedisKey.TOPIC_NOT_EXIST)) {
+                return new Pages<>(0, 0, Collections.emptyList());
+            }else {
+                List<TopicDO> topicList = topicDao.listTopic();
+                if(CollectionUtils.isEmpty(topicList)){
+                    redisOperation.set(RedisKey.TOPIC_NOT_EXIST,1);
+                    return new Pages<>(0,0,Collections.emptyList());
+                }
+                for (TopicDO topic : topicList){
+                    redisOperation.addZSetItem(RedisKey.ALL_TOPIC_ID_LIST,topic.getId(),topic.getPubTime().getTime());
+                }
+            }
+        }
+        Long size = redisOperation.zSetSize(RedisKey.ALL_TOPIC_ID_LIST);
+        int totalNumber = (int) (size / pageSize);
+        if(totalNumber * pageSize < size){
+            ++totalNumber;
+        }
+        if((pageNumber - 1) * pageSize > size){
+            return new Pages<>(totalNumber,Integer.valueOf(String.valueOf(size)),Collections.emptyList());
+        }
+        List<Integer> topicIdList = redisOperation.rangeZSet(RedisKey.ALL_TOPIC_ID_LIST,pageNumber,pageSize);
+        List<TopicVO> topicList = new ArrayList<>(topicIdList.size());
+        if(!CollectionUtils.isEmpty(topicIdList)){
+            for (Integer topicId : topicIdList){
+                TopicDO topicDO = findTopic(topicId);
+                if(topicDO != null){
+                    TopicVO topicVO = new TopicVO(topicDO);
+                    topicVO.setScanCount(findTopicScanCount(topicId));
+                    topicList.add(topicVO);
+                }
+            }
+        }
+        return new Pages<>(totalNumber,Integer.valueOf(String.valueOf(size)),topicList);
     }
 
     @Override

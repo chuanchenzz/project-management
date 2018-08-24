@@ -87,6 +87,15 @@ public class TopicController {
         return new JsonResponse<>(new Pages<>(totalPage,totalCount,topicList),StatusCodeEnum.SUCCESS.getCode());
     }
 
+    @RequestMapping(value = "/time/pages",method = RequestMethod.GET)
+    public JsonResponse<Pages<TopicVO>> findTopicListByTime(@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize){
+        if(pageNumber <= 0 ||pageSize <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Pages<TopicVO> topicPage = topicService.findTopicPage(pageNumber,pageSize);
+        return new JsonResponse<>(topicPage,StatusCodeEnum.SUCCESS.getCode());
+    }
+
     @RequestMapping(value = "/audit/{id}",method = RequestMethod.POST)
     public JsonResponse<Integer> auditTopic(@PathVariable("id") int id, @RequestParam("status") int status){
         boolean invalidArgs = id <= 0 || (status != TopicDO.StatusEnum.HIDDEN.statusCode && status != TopicDO.StatusEnum.DISPLAY.statusCode);

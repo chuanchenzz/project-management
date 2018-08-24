@@ -1,9 +1,6 @@
 package com.outsource.service;
 
-import com.outsource.model.ProjectDO;
-import com.outsource.model.ProjectTypeDO;
-import com.outsource.model.ProjectTypeVO;
-import com.outsource.model.ProjectVO;
+import com.outsource.model.*;
 
 import java.util.List;
 
@@ -128,4 +125,14 @@ public interface IProjectService {
      * @return
      */
     Integer deleteProject(int projectId);
+
+    /**
+     * 搜索项目
+     * @param projectTypeId
+     * @param keyWord
+     * @param money
+     * @param location
+     * @return
+     */
+    Pages<ProjectVO> searchProjectList(Integer projectTypeId, String keyWord, Integer money, String location, Integer recommendLevel, int pageSize,int pageNumber);
 }

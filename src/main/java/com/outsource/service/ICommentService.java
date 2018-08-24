@@ -1,6 +1,7 @@
 package com.outsource.service;
 
 import com.outsource.model.CommentDO;
+import com.outsource.model.CommentVO;
 
 import java.util.List;
 
@@ -77,5 +78,5 @@ public interface ICommentService {
      * @param pageSize
      * @return
      */
-    List<CommentDO> findCommentList(int pageNumber, int pageSize);
+    List<CommentVO> findCommentList(int pageNumber, int pageSize);
 }

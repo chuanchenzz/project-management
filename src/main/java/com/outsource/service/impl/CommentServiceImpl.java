@@ -2,8 +2,11 @@ package com.outsource.service.impl;
 
 import com.outsource.dao.CommentDao;
 import com.outsource.model.CommentDO;
+import com.outsource.model.CommentVO;
+import com.outsource.model.ProjectDO;
 import com.outsource.model.RedisKey;
 import com.outsource.service.ICommentService;
+import com.outsource.service.IProjectService;
 import com.outsource.util.KeyUtil;
 import com.outsource.util.RedisOperation;
 import org.slf4j.Logger;
@@ -25,6 +28,8 @@ public class CommentServiceImpl implements ICommentService{
     private static final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
     @Autowired
     CommentDao commentDao;
+    @Autowired
+    IProjectService projectService;
     @Autowired
     RedisOperation redisOperation;
     @Override
@@ -152,13 +157,18 @@ public class CommentServiceImpl implements ICommentService{
     }
 
     @Override
-    public List<CommentDO> findCommentList(int pageNumber, int pageSize) {
+    public List<CommentVO> findCommentList(int pageNumber, int pageSize) {
         List<Integer> commentIdList = findCommentIdList(pageNumber,pageSize);
-        List<CommentDO> commentList = new ArrayList<>(commentIdList.size());
+        List<CommentVO> commentList = new ArrayList<>(commentIdList.size());
         for(Integer commentId : commentIdList){
             CommentDO comment = findComment(commentId);
             if(comment != null){
-                commentList.add(comment);
+                CommentVO commentVO = new CommentVO(comment);
+                ProjectDO project = projectService.findProject(comment.getProjectId());
+                if(project != null){
+                    commentVO.setProjectName(project.getName());
+                }
+                commentList.add(commentVO);
             }
         }
         return commentList;

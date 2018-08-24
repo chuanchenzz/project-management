@@ -1,9 +1,6 @@
 package com.outsource.service;
 
-import com.outsource.model.TopicDO;
-import com.outsource.model.TopicTypeDO;
-import com.outsource.model.TopicTypeVO;
-import com.outsource.model.TopicVO;
+import com.outsource.model.*;
 
 import java.util.List;
 
@@ -120,6 +117,14 @@ public interface ITopicService {
      * @return
      */
     List<TopicVO> findTopicList(int topicTypeId, int pageNumber, int pageSize);
+
+    /**
+     * 获取文章列表(全局)
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    Pages<TopicVO> findTopicPage(int pageNumber, int pageSize);
 
     /**
      * 文章浏览数加一

@@ -1,10 +1,7 @@
 package com.outsource.controller;
 
 import com.outsource.constant.StatusCodeEnum;
-import com.outsource.model.CommentDO;
-import com.outsource.model.JsonResponse;
-import com.outsource.model.Pages;
-import com.outsource.model.ProjectDO;
+import com.outsource.model.*;
 import com.outsource.service.ICommentService;
 import com.outsource.service.IProjectService;
 import com.outsource.util.StringUtils;
@@ -28,9 +25,9 @@ public class CommentController {
     @Autowired
     IProjectService projectService;
     @RequestMapping(value = "/",method = RequestMethod.POST)
-    public JsonResponse<Integer> addComment(@RequestParam("name")String name, @RequestParam("mobile") String mobile,@RequestParam("email") String email,
+    public JsonResponse<Integer> addComment(@RequestParam("name")String name, @RequestParam("mobile") String mobile,@RequestParam(value = "email",required = false) String email,
                                             @RequestParam("project_id") int projectId,@RequestParam("content") String content){
-        if(StringUtils.isEmpty(name,mobile,email,content) || projectId <= 0){
+        if(StringUtils.isEmpty(name,mobile,content) || projectId <= 0){
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
         }
         ProjectDO projectDO = projectService.findProject(projectId);
@@ -40,7 +37,9 @@ public class CommentController {
         CommentDO commentDO = new CommentDO();
         commentDO.setName(name);
         commentDO.setMobile(mobile);
-        commentDO.setEmail(email);
+        if(StringUtils.isNotEmpty(email)) {
+            commentDO.setEmail(email);
+        }
         commentDO.setProjectId(projectId);
         commentDO.setContent(content);
         commentDO = commentService.addComment(commentDO);
@@ -75,7 +74,7 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/pages",method = RequestMethod.GET)
-    public JsonResponse<Pages<CommentDO>> findCommentList(@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize){
+    public JsonResponse<Pages<CommentVO>> findCommentList(@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize){
         if(pageNumber <= 0 || pageSize <= 0){
             return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
         }
@@ -84,7 +83,7 @@ public class CommentController {
         if((pageNumber - 1) * pageSize >= commentCount){
             return new JsonResponse<>(new Pages<>(totalNumber,commentCount, Collections.emptyList()),StatusCodeEnum.SUCCESS.getCode());
         }
-        List<CommentDO> commentList = commentService.findCommentList(pageNumber,pageSize);
+        List<CommentVO> commentList = commentService.findCommentList(pageNumber,pageSize);
         return new JsonResponse<>(new Pages<>(totalNumber,commentCount,commentList),StatusCodeEnum.SUCCESS.getCode());
     }
 }

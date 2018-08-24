@@ -31,6 +31,10 @@ public class RedisKey {
 
     public static final String TOPIC_ID_LIST = "topic_id_list_";
 
+    public static final String ALL_TOPIC_ID_LIST = "all_topic_id_list";
+
+    public static final String TOPIC_NOT_EXIST = "sign_topic_not_exist";
+
     public static final String TOPIC_SCAN_COUNT = "topic_scan_count_";
 
     public static final String COMMENT = "comment_";

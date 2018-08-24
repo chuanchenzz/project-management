@@ -339,4 +339,36 @@ public class ProjectServiceImpl implements IProjectService {
         redisOperation.removeZSetEntry(projectIdListKey,projectId);
         return projectId;
     }
+
+    @Override
+    public Pages<ProjectVO> searchProjectList(Integer projectTypeId, String keyWord, Integer money, String location, Integer recommendLevel,int pageSize,int pageNumber) {
+        List<Integer> projectTypeIdList = null;
+        if(projectTypeId != null){
+            List<ProjectTypeVO> projectTypeList = findChildProjectTypeList(projectTypeId);
+            if(!CollectionUtils.isEmpty(projectTypeList)){
+                projectTypeIdList = new ArrayList<>(projectTypeList.size());
+                for (ProjectTypeVO projectType : projectTypeList){
+                    projectTypeIdList.add(projectType.getId());
+                }
+            }
+        }
+        List<Integer> projectIdList = projectDao.searchProjectIdList(projectTypeIdList,keyWord,money,location,recommendLevel);
+        if(CollectionUtils.isEmpty(projectIdList)){
+            return new Pages<>(0,0,Collections.emptyList());
+        }
+        int totalCount = projectIdList.size();
+        int totalNumber = totalCount % pageSize == 0 ? totalCount / pageSize : totalCount / pageSize + 1;
+        if(pageNumber > totalNumber){
+            return new Pages<>(totalNumber,totalCount,Collections.emptyList());
+        }
+        List<Integer> subProjectIdList = projectIdList.subList((pageNumber - 1) * pageSize,(pageNumber - 1) * pageSize + pageSize > projectIdList.size() ? projectIdList.size() : (pageNumber - 1) * pageSize + pageSize);
+        List<ProjectVO> projectList = new ArrayList<>(subProjectIdList.size());
+        for (Integer projectId : subProjectIdList){
+            ProjectDO projectDO = findProject(projectId);
+            if(projectDO != null){
+                projectList.add(new ProjectVO(projectDO));
+            }
+        }
+        return new Pages<>(totalNumber,totalCount,projectList);
+    }
 }

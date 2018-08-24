@@ -13,8 +13,8 @@ public class ProjectDO implements Serializable{
     private String name;
     private String description;
     private String location;
-    private String startMoney;
-    private String endMoney;
+    private Integer startMoney;
+    private Integer endMoney;
     private String mobile;
     private String masterGraph;
     private String introduction;
@@ -78,19 +78,19 @@ public class ProjectDO implements Serializable{
         this.location = location;
     }
 
-    public String getStartMoney() {
+    public Integer getStartMoney() {
         return startMoney;
     }
 
-    public void setStartMoney(String startMoney) {
+    public void setStartMoney(Integer startMoney) {
         this.startMoney = startMoney;
     }
 
-    public String getEndMoney() {
+    public Integer getEndMoney() {
         return endMoney;
     }
 
-    public void setEndMoney(String endMoney) {
+    public void setEndMoney(Integer endMoney) {
         this.endMoney = endMoney;
     }
 

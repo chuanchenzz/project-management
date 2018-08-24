@@ -6,8 +6,8 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="location" property="location" jdbcType="VARCHAR"/>
-        <result column="start_money" property="startMoney" jdbcType="VARCHAR"/>
-        <result column="end_money" property="endMoney" jdbcType="VARCHAR"/>
+        <result column="start_money" property="startMoney" jdbcType="INTEGER"/>
+        <result column="end_money" property="endMoney" jdbcType="INTEGER"/>
         <result column="master_graph" property="masterGraph" jdbcType="VARCHAR"/>
         <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
         <result column="poster" property="poster" jdbcType="VARCHAR"/>
@@ -23,7 +23,7 @@
         SELECT * FROM project WHERE id = #{id};
     </select>
     <update id="updateDisplayStatus">
-        UPDATE project SET display_status = #{status};
+        UPDATE project SET display_status = #{status} WHERE id = #{id};
     </update>
     <update id="updateProject" parameterType="com.outsource.model.ProjectDO">
         UPDATE project
@@ -60,5 +60,29 @@
     </update>
     <select id="pagesProjectByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT * FROM project WHERE display_status IN(0,1) ORDER BY time DESC;
+    </select>
+    <select id="searchProjectIdList" resultType="java.lang.Integer">
+        SELECT id FROM project
+        <where>
+            <if test="projectTypeIdList != null">
+                classification IN
+                <foreach collection="projectTypeIdList" open="(" item="projectTypeId" index="index" separator="," close=")">
+                    #{projectTypeId}
+                </foreach>
+            </if>
+            <if test="keyWord != null">
+                AND name LIKE concat(concat('%',#{keyWord}),'%')
+            </if>
+            <if test="money != null">
+                AND start_money &lt;= #{money} AND end_money >= #{money}
+            </if>
+            <if test="location != null">
+                AND location = #{location}
+            </if>
+            <if test="recommendLevel != null">
+                AND recommend_level = #{recommendLevel}
+            </if>
+            AND display_status = 1;
+        </where>
     </select>
 </mapper>

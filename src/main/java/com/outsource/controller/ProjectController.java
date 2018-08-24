@@ -123,6 +123,18 @@ public class ProjectController {
         return updateResult == null ? new JsonResponse<>(StatusCodeEnum.SERVER_ERROR.getCode(),"内部错误!") : new JsonResponse<>(updateResult,StatusCodeEnum.SUCCESS.getCode());
     }
 
+    @RequestMapping(value = "/id",method = RequestMethod.GET)
+    public JsonResponse<ProjectVO> findProject(@RequestParam("id") int id){
+        if(id <= 0){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        ProjectDO project = projectService.findProject(id);
+        if(project == null){
+            return new JsonResponse<>(StatusCodeEnum.NOT_FOUND.getCode(),"未找到项目!");
+        }
+        return new JsonResponse<>(new ProjectVO(project),StatusCodeEnum.SUCCESS.getCode());
+    }
+
     @RequestMapping(value = "/images/{imageName}", method = RequestMethod.GET)
     public ResponseEntity findImage(@PathVariable("imageName") String imageName) {
         HttpHeaders headers = new HttpHeaders();
@@ -136,26 +148,30 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/images", method = RequestMethod.POST)
-    public Map<String, String> uploadImages(@RequestParam("file") MultipartFile multipartFile) {
-        if (multipartFile.isEmpty() || StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
+    public List<String> uploadImages(@RequestParam("files") MultipartFile[] multipartFiles) {
+        if(multipartFiles == null){
             throw new IllegalArgumentException("images is empty!");
         }
-        String contentType = multipartFile.getContentType();
-        if (!contentType.contains("")) {
-            throw new IllegalArgumentException();
+        for(MultipartFile multipartFile : multipartFiles){
+            if (multipartFile.isEmpty() || StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
+                throw new IllegalArgumentException("images is empty!");
+            }
         }
-        String filePath = ImageUtils.generateFileName(".png");
-        //获取路径
-        String absolutePath = ImageUtils.saveImg(multipartFile, IMAGE_DIR, filePath);
-        if (absolutePath == null) {
-            throw new IllegalArgumentException();
+        List<String> pathList = new ArrayList<>(multipartFiles.length);
+        for(MultipartFile multipartFile : multipartFiles){
+            String contentType = multipartFile.getContentType();
+            if (!contentType.contains("")) {
+                throw new IllegalArgumentException();
+            }
+            String filePath = ImageUtils.generateFileName(".png");
+            //获取路径
+            String absolutePath = ImageUtils.saveImg(multipartFile, IMAGE_DIR, filePath);
+            if (absolutePath == null) {
+                throw new IllegalArgumentException();
+            }
+            pathList.add("http://140.143.2.99:8999/project/images/" + filePath);
         }
-        Map<String, String> resultMap = new HashMap<>(4);
-        resultMap.put("state", "SUCCESS");
-        resultMap.put("url", "http://140.143.2.99:8999/project/images/" + filePath);
-        resultMap.put("title", filePath);
-        resultMap.put("original", filePath);
-        return resultMap;
+        return pathList;
     }
 
     @AuthLevel(type = AuthEnum.REVIEW_MANAGER)
@@ -195,6 +211,18 @@ public class ProjectController {
         return new JsonResponse<>(new Pages<>(totalPage,totalCount,projectVOList),StatusCodeEnum.SUCCESS.getCode());
     }
 
+    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    public JsonResponse<Pages<ProjectVO>> searchProjectList(@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize,@RequestParam(value = "key_word",required = false) String keyWord, @RequestParam(value = "money",required = false) String money,@RequestParam(value = "location",required = false) String location,
+                                                                      @RequestParam(value = "project_type_id",required = false) Integer projectTypeId,@RequestParam(value = "recommend_level",required = false) Integer recommendLevel){
+        boolean isInvalidArgs = pageNumber <= 0 || pageSize <= 0 || (StringUtils.isAllEmpty(keyWord,money,location) && (projectTypeId == null || projectTypeId <= 0) && (recommendLevel == null || recommendLevel <= 0));
+        if(isInvalidArgs){
+            return new JsonResponse<>(StatusCodeEnum.PARAMETER_ERROR.getCode(),"参数错误!");
+        }
+        Integer iMoney = StringUtils.isEmpty(money) ? null : Integer.valueOf(money);
+        Pages<ProjectVO> projectPage = projectService.searchProjectList(projectTypeId,keyWord,iMoney,location,recommendLevel,pageSize,pageNumber);
+        return new JsonResponse<>(projectPage,StatusCodeEnum.SUCCESS.getCode());
+    }
+
     private ProjectDO projectArgsIsValid(String name, String location, String startMoney, String endMoney, String mobile, String masterGraph, String introduction, String poster, int classification, String description, int recommendLevel) {
         if (StringUtils.isEmpty(name, location, startMoney, endMoney, mobile, masterGraph, introduction, poster, description)) {
             logger.warn("params is null! name:{}, location:{}, startMoney:{}, endMoney:{},mobile:{},masterGraph:{},introduction:{},poster:{},description:{}", name, location, startMoney,endMoney, mobile, masterGraph, introduction, poster, description);
@@ -224,8 +252,8 @@ public class ProjectController {
         ProjectDO project = new ProjectDO();
         project.setName(name);
         project.setLocation(location);
-        project.setStartMoney(startMoney);
-        project.setEndMoney(endMoney);
+        project.setStartMoney(Integer.valueOf(startMoney));
+        project.setEndMoney(Integer.valueOf(startMoney));
         project.setMobile(mobile);
         project.setMasterGraph(masterGraph);
         project.setIntroduction(introduction);
