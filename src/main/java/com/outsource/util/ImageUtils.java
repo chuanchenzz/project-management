@@ -3,6 +3,7 @@ package com.outsource.util;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.UUID;
 
 /**
  * @author chuanchen
@@ -22,7 +23,7 @@ public class ImageUtils {
     }
 
     public static String generateFileName(String fileSuffix){
-        return System.currentTimeMillis() + fileSuffix;
+        return UUIDUtils.generateUUID() + fileSuffix;
     }
 
     public static String saveImg(MultipartFile multipartFile,String dirPath, String filePath) {

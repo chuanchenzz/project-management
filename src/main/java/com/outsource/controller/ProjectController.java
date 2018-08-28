@@ -169,7 +169,7 @@ public class ProjectController {
             if (absolutePath == null) {
                 throw new IllegalArgumentException();
             }
-            pathList.add("http://140.143.2.99:8999/project/images/" + filePath);
+            pathList.add("http://www.zx058.cn/api/project/images/" + filePath);
         }
         return pathList;
     }

@@ -19,4 +19,9 @@ public class RedisOperationTest {
         Long size = redisOperation.zSetSize(key);
         System.out.println(size);
     }
+
+    @Test
+    public void testUUID(){
+        System.out.println(UUIDUtils.generateUUID());
+    }
 }
